@@ -1,7 +1,12 @@
 import React from 'react'
 
 function App() {
-  return <h1>yo!</h1>
+  return (
+    <div>
+      <h1>Hello world</h1>
+      <p>this is wealth map</p>
+    </div>
+  )
 }
 
 export default App
