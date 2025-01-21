@@ -26,7 +26,7 @@ const LoginForm = ({ className, ...props }: React.ComponentPropsWithoutRef<'form
               Forgot your password?
             </Link>
           </div>
-          <Input id="password" type="password" required />
+          <Input id="password" type="password" placeholder="Enter password" required />
         </div>
         <Button type="submit" className="w-full">
           Login
