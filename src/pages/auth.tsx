@@ -6,8 +6,8 @@ const Auth = () => {
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="relative hidden bg-muted lg:flex justify-center items-center">
         <img
-          src="/assets/echio-logo.png"
-          alt="echio logo"
+          src="/assets/logo.png"
+          alt="logo"
           className="inset-0 w-1/3 object-cover dark:brightness-[0.8]"
         />
       </div>

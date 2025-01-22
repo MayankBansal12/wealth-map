@@ -4,16 +4,16 @@ import { persist } from 'zustand/middleware'
 
 type UserAuthStoreType = {
   user: User | null
-  login: (userData: User) => void
-  logout: () => void
+  setLoginUser: (userData: User) => void
+  logoutUser: () => void
 }
 
 const useAuthStore = create<UserAuthStoreType>()(
   persist(
     (set) => ({
       user: null,
-      login: (userData) => set({ user: userData }),
-      logout: () => set({ user: null }),
+      setLoginUser: (userData) => set({ user: userData }),
+      logoutUser: () => set({ user: null }),
     }),
     {
       name: 'auth-storage',
