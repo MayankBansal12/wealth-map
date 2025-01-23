@@ -21,8 +21,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import useAuthStore from '@/store/useAuthStore'
 
 const Header = () => {
+  const { logoutUser } = useAuthStore()
+
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
@@ -105,11 +108,11 @@ const Header = () => {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <AlertDialogTrigger asChild>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem>
                   <span>Logout</span>
-                </AlertDialogTrigger>
-              </DropdownMenuItem>
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
           <AlertDialogContent>
@@ -121,7 +124,7 @@ const Header = () => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Sure</AlertDialogAction>
+              <AlertDialogAction onClick={() => logoutUser()}>Logout</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

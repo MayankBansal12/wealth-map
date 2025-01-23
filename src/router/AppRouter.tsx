@@ -1,3 +1,5 @@
+import AuthGuard from '@/components/auth-protect/AuthGuard'
+import CheckToken from '@/components/auth-protect/CheckToken'
 import Auth from '@/pages/auth'
 import Home from '@/pages/home'
 import PageNotFound from '@/pages/page-not-found'
@@ -6,19 +8,29 @@ import { createBrowserRouter } from 'react-router-dom'
 
 export default createBrowserRouter([
   {
-    path: '/auth',
-    element: <Auth />,
+    element: <CheckToken />,
+    children: [
+      {
+        path: '/auth',
+        element: <Auth />,
+      },
+      {
+        path: '/reset-pass',
+        element: <ResetPassword />,
+      },
+    ],
   },
   {
-    path: '/reset-pass',
-    element: <ResetPassword />,
-  },
-  {
-    path: '/home',
-    element: <Home />,
-  },
-  {
-    path: '*',
-    element: <PageNotFound />,
+    element: <AuthGuard />,
+    children: [
+      {
+        path: '/home',
+        element: <Home />,
+      },
+      {
+        path: '*',
+        element: <PageNotFound />,
+      },
+    ],
   },
 ])

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useLoginUser } from '@/hooks/api/useAuth'
 import { useState } from 'react'
 import { AlertCircle } from 'lucide-react'
@@ -13,7 +13,10 @@ const LoginForm = ({ className, ...props }: React.ComponentPropsWithoutRef<'form
     email: '',
     passwd: '',
   })
-  const { mutate, isPending, error } = useLoginUser()
+  const location = useLocation()
+  const state = location.search?.split('?state=')
+
+  const { mutate, isPending, error } = useLoginUser(!state || !state[1] ? '/home' : state[1])
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserData({ ...userData, [e.target.name]: e.target.value })
@@ -34,7 +37,11 @@ const LoginForm = ({ className, ...props }: React.ComponentPropsWithoutRef<'form
         </Alert>
       )}
 
-      <form className={cn('flex flex-col gap-6', className)} {...props} onSubmit={handleLogin}>
+      <form
+        className={cn('flex flex-col gap-6', className)}
+        {...props}
+        onSubmit={(e) => handleLogin(e)}
+      >
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Login to wealth map</h1>
           <p className="text-balance text-sm text-muted-foreground">

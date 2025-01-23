@@ -1,12 +1,12 @@
-import { loginUser } from '@/api/authApi'
-import { LoginRequest, LoginResponse } from '@/type/types'
-import { useMutation } from '@tanstack/react-query'
+import { fetchUser, loginUser } from '@/api/authApi'
+import { LoginRequest, LoginResponse, User } from '@/type/types'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from '../use-toast'
 import useAuthStore from '@/store/useAuthStore'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 
-export const useLoginUser = () => {
+export const useLoginUser = (redirectAfterLogin: string) => {
   const { setLoginUser } = useAuthStore()
   const navigate = useNavigate()
 
@@ -18,10 +18,18 @@ export const useLoginUser = () => {
       toast({
         description: 'Login Successful!',
       })
-      navigate('/home')
+      navigate(redirectAfterLogin)
     },
     onError: (error) => {
       console.log('error logging in : ', error)
     },
+  })
+}
+
+export const useFetchUser = (shouldFetch: boolean) => {
+  return useQuery<User, Error>({
+    queryKey: ['user'],
+    queryFn: fetchUser,
+    enabled: shouldFetch,
   })
 }
