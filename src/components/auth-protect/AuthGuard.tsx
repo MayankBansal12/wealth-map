@@ -3,6 +3,7 @@ import useAuthStore from '@/store/useAuthStore'
 import Cookies from 'js-cookie'
 import { useEffect } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Loader } from '../ui/loader'
 
 const AuthGuard = () => {
   const { user, setLoginUser, logoutUser } = useAuthStore()
@@ -40,7 +41,7 @@ const AuthGuard = () => {
   }, [error, navigate])
 
   if (isLoading) {
-    return <span className="w-full h-[90vh] flex justify-center items-center">loading...</span> // replace with loader
+    return <Loader />
   }
   return <Outlet />
 }
