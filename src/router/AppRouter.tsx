@@ -4,7 +4,7 @@ import Auth from '@/pages/auth'
 import Home from '@/pages/home'
 import PageNotFound from '@/pages/page-not-found'
 import ResetPassword from '@/pages/ResetPassword'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 export default createBrowserRouter([
   {
@@ -23,6 +23,10 @@ export default createBrowserRouter([
   {
     element: <AuthGuard />,
     children: [
+      {
+        path: '/',
+        element: <Navigate to="/home" replace />,
+      },
       {
         path: '/home',
         element: <Home />,
