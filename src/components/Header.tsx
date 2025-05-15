@@ -7,8 +7,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Link } from 'react-router-dom'
-import { BellIcon, CircleUser, Menu, Package2 } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
+import { CircleUser, Menu, Package2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
@@ -22,9 +22,11 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import useAuthStore from '@/store/useAuthStore'
+import { ThemeSwitch } from './ThemeSwitch'
 
 const Header = () => {
   const { logoutUser } = useAuthStore()
+  const { pathname } = useLocation()
 
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -33,19 +35,49 @@ const Header = () => {
           <Package2 className="h-6 w-6" />
           <span className="sr-only">Wealth Map</span>
         </Link>
-        <Link to="#" className="text-foreground transition-colors hover:text-foreground">
+        <Link
+          to="/home"
+          className={
+            'transition-colors hover:text-foreground ' +
+            (pathname === '/home' ? 'text-foreground' : 'text-muted-foreground')
+          }
+        >
           Dashboard
         </Link>
-        <Link to="#" className="text-muted-foreground transition-colors hover:text-foreground">
+        <Link
+          to="/posts"
+          className={
+            'transition-colors ' +
+            (pathname === '/posts' ? 'text-foreground' : 'text-muted-foreground')
+          }
+        >
           Posts
         </Link>
-        <Link to="#" className="text-muted-foreground transition-colors hover:text-foreground">
+        <Link
+          to="/payments"
+          className={
+            'transition-colors hover:text-foreground ' +
+            (pathname === '/payments' ? 'text-foreground' : 'text-muted-foreground')
+          }
+        >
           Payments
         </Link>
-        <Link to="#" className="text-muted-foreground transition-colors hover:text-foreground">
+        <Link
+          to="/brands"
+          className={
+            'transition-colors hover:text-foreground ' +
+            (pathname === '/brands' ? 'text-foreground' : 'text-muted-foreground')
+          }
+        >
           Brands
         </Link>
-        <Link to="#" className="text-muted-foreground transition-colors hover:text-foreground">
+        <Link
+          to="/influencers"
+          className={
+            'transition-colors hover:text-foreground ' +
+            (pathname === '/influencers' ? 'text-foreground' : 'text-muted-foreground')
+          }
+        >
           Users
         </Link>
       </nav>
@@ -62,37 +94,57 @@ const Header = () => {
               <Package2 className="h-6 w-6" />
               <span className="sr-only">Acme Inc</span>
             </Link>
-            <Link to="#" className="hover:text-foreground">
+            <Link
+              to="/home"
+              className={
+                'hover:text-foreground ' +
+                (pathname === '/home' ? 'text-foreground' : 'text-muted-foreground')
+              }
+            >
               Dashboard
             </Link>
-            <Link to="#" className="text-muted-foreground hover:text-foreground">
+            <Link
+              to="/posts"
+              className={
+                'hover:text-foreground ' +
+                (pathname === '/posts' ? 'text-foreground' : 'text-muted-foreground')
+              }
+            >
               Posts
             </Link>
-            <Link to="#" className="text-muted-foreground hover:text-foreground">
+            <Link
+              to="/payments"
+              className={
+                'hover:text-foreground ' +
+                (pathname === '/payments' ? 'text-foreground' : 'text-muted-foreground')
+              }
+            >
               Payments
             </Link>
-            <Link to="#" className="text-muted-foreground hover:text-foreground">
+            <Link
+              to="/brands"
+              className={
+                'hover:text-foreground ' +
+                (pathname === '/brands' ? 'text-foreground' : 'text-muted-foreground')
+              }
+            >
               Brands
             </Link>
-            <Link to="#" className="text-muted-foreground hover:text-foreground">
+            <Link
+              to="/influencers"
+              className={
+                'hover:text-foreground ' +
+                (pathname === '/influencers' ? 'text-foreground' : 'text-muted-foreground')
+              }
+            >
               Users
             </Link>
           </nav>
         </SheetContent>
       </Sheet>
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        {/* <form className="ml-auto flex-1 sm:flex-initial">
-                    <div className="relative">
-                  nj      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            type="search"
-                            placeholder="Search products..."
-                            className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-                        />
-                    </div>
-                </form> */}
         <div className="ml-auto flex-1 sm:flex-initial">
-          <BellIcon className="w-5 h-5" />
+          <ThemeSwitch />
         </div>
         <AlertDialog>
           <DropdownMenu>
