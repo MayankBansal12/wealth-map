@@ -45,37 +45,28 @@ const Header = () => {
           Dashboard
         </Link>
         <Link
-          to="/posts"
+          to="/search"
           className={
             'transition-colors ' +
-            (pathname === '/posts' ? 'text-foreground' : 'text-muted-foreground')
+            (pathname === '/search' ? 'text-foreground' : 'text-muted-foreground')
           }
         >
-          Posts
+          search
         </Link>
         <Link
-          to="/payments"
+          to="/reports"
           className={
             'transition-colors hover:text-foreground ' +
-            (pathname === '/payments' ? 'text-foreground' : 'text-muted-foreground')
+            (pathname === '/reports' ? 'text-foreground' : 'text-muted-foreground')
           }
         >
-          Payments
+          reports
         </Link>
         <Link
-          to="/brands"
+          to="/members"
           className={
             'transition-colors hover:text-foreground ' +
-            (pathname === '/brands' ? 'text-foreground' : 'text-muted-foreground')
-          }
-        >
-          Brands
-        </Link>
-        <Link
-          to="/influencers"
-          className={
-            'transition-colors hover:text-foreground ' +
-            (pathname === '/influencers' ? 'text-foreground' : 'text-muted-foreground')
+            (pathname === '/members' ? 'text-foreground' : 'text-muted-foreground')
           }
         >
           Users
@@ -104,37 +95,28 @@ const Header = () => {
               Dashboard
             </Link>
             <Link
-              to="/posts"
+              to="/search"
               className={
                 'hover:text-foreground ' +
-                (pathname === '/posts' ? 'text-foreground' : 'text-muted-foreground')
+                (pathname === '/search' ? 'text-foreground' : 'text-muted-foreground')
               }
             >
-              Posts
+              search
             </Link>
             <Link
-              to="/payments"
+              to="/reports"
               className={
                 'hover:text-foreground ' +
-                (pathname === '/payments' ? 'text-foreground' : 'text-muted-foreground')
+                (pathname === '/reports' ? 'text-foreground' : 'text-muted-foreground')
               }
             >
-              Payments
+              reports
             </Link>
             <Link
-              to="/brands"
+              to="/members"
               className={
                 'hover:text-foreground ' +
-                (pathname === '/brands' ? 'text-foreground' : 'text-muted-foreground')
-              }
-            >
-              Brands
-            </Link>
-            <Link
-              to="/influencers"
-              className={
-                'hover:text-foreground ' +
-                (pathname === '/influencers' ? 'text-foreground' : 'text-muted-foreground')
+                (pathname === '/members' ? 'text-foreground' : 'text-muted-foreground')
               }
             >
               Users

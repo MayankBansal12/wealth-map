@@ -1,4 +1,4 @@
-import AuthGuard from '@/components/auth-protect/AuthGuard'
+// import AuthGuard from '@/components/auth-protect/AuthGuard'
 import CheckToken from '@/components/auth-protect/CheckToken'
 import Auth from '@/pages/auth'
 import Home from '@/pages/home'
@@ -21,7 +21,8 @@ export default createBrowserRouter([
     ],
   },
   {
-    element: <AuthGuard />,
+    // uncomment this when authentication is connected and working to enable protected routes
+    // element: <AuthGuard />,
     children: [
       {
         path: '/',
