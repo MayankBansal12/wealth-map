@@ -4,6 +4,7 @@ import Auth from '@/pages/auth'
 import Home from '@/pages/home'
 import PageNotFound from '@/pages/page-not-found'
 import ResetPassword from '@/pages/ResetPassword'
+import SearchPlace from '@/pages/searchplace'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 export default createBrowserRouter([
@@ -31,6 +32,10 @@ export default createBrowserRouter([
       {
         path: '/home',
         element: <Home />,
+      },
+      {
+        path: '/searchplace',
+        element: <SearchPlace />,
       },
       {
         path: '*',
