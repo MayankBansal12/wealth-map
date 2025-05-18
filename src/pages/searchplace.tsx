@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
-// Fix for default marker icons in Leaflet with Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -21,7 +20,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 })
 
-// Mock data for locations
 const mockLocations = [
   {
     id: 1,
@@ -47,16 +45,11 @@ const mockLocations = [
     lng: -112.1401,
     type: 'natural',
   },
-  // Add more mock locations as needed
 ]
 
 // Map bounds for US
-const US_BOUNDS = L.latLngBounds(
-  L.latLng(24.396308, -125.0), // Southwest
-  L.latLng(49.384358, -66.93457) // Northeast
-)
+const US_BOUNDS = L.latLngBounds(L.latLng(24.396308, -125.0), L.latLng(49.384358, -66.93457))
 
-// Component to handle map bounds
 function MapBounds() {
   const map = useMap()
 
@@ -69,7 +62,6 @@ function MapBounds() {
   return null
 }
 
-// Component to handle map view changes
 function MapView({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap()
 
@@ -88,7 +80,6 @@ export default function SearchPlace() {
   const [filteredLocations, setFilteredLocations] = useState(mockLocations)
   const mapRef = useRef<L.Map>(null)
 
-  // Filter locations based on search query and type
   useEffect(() => {
     const filtered = mockLocations.filter((location) => {
       const matchesSearch =
@@ -100,7 +91,6 @@ export default function SearchPlace() {
     setFilteredLocations(filtered)
   }, [searchQuery, selectedType])
 
-  // Handle location card click
   const handleLocationClick = (location: (typeof mockLocations)[0]) => {
     setSelectedLocation(location)
     if (mapRef.current) {
@@ -110,14 +100,8 @@ export default function SearchPlace() {
 
   return (
     <div className="flex flex-col lg:flex-row h-screen">
-      {/* Map Container */}
       <div className="w-full lg:w-2/3 h-1/2 lg:h-full relative">
-        <MapContainer
-          center={[39.8283, -98.5795]} // Center of US
-          zoom={4}
-          className="w-full h-full"
-          ref={mapRef}
-        >
+        <MapContainer center={[39.8283, -98.5795]} zoom={4} className="w-full h-full" ref={mapRef}>
           <MapBounds />
           {selectedLocation && (
             <MapView center={[selectedLocation.lat, selectedLocation.lng]} zoom={13} />
@@ -155,10 +139,8 @@ export default function SearchPlace() {
         </MapContainer>
       </div>
 
-      {/* Side Panel */}
       <div className="w-full lg:w-1/3 h-1/2 lg:h-full p-4 overflow-y-auto bg-gray-50">
         <div className="space-y-4">
-          {/* Search and Filter Controls */}
           <div className="space-y-2">
             <Input
               placeholder="Search locations..."
@@ -181,7 +163,7 @@ export default function SearchPlace() {
                 variant={mapView === 'street' ? 'default' : 'outline'}
                 onClick={() => setMapView('street')}
               >
-                Street View
+                Standard View
               </Button>
               <Button
                 variant={mapView === 'satellite' ? 'default' : 'outline'}
@@ -192,7 +174,6 @@ export default function SearchPlace() {
             </div>
           </div>
 
-          {/* Location Cards */}
           <div className="space-y-4">
             {filteredLocations.map((location) => (
               <Card
