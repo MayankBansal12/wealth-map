@@ -1,6 +1,12 @@
 export interface User {
+  id: string
   name: string
-  username: string
+  email: string
+  type: string
+  company: {
+    id: string
+    name: string
+  }
 }
 
 export interface LoginRequest {

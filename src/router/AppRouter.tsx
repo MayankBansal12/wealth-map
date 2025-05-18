@@ -1,10 +1,15 @@
 // import AuthGuard from '@/components/auth-protect/AuthGuard'
 import CheckToken from '@/components/auth-protect/CheckToken'
 import Auth from '@/pages/auth'
-import Home from '@/pages/home'
 import PageNotFound from '@/pages/page-not-found'
 import ResetPassword from '@/pages/ResetPassword'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import Analytics2 from '@/pages/v2/analytics2'
+import Auth2 from '@/pages/v2/auth2'
+import Dashboard2 from '@/pages/v2/dashboard2'
+import Landing from '@/pages/v2/landing2'
+import Members2 from '@/pages/v2/member2'
+import Wrapper from '@/pages/v2/wrapper2'
+import { createBrowserRouter } from 'react-router-dom'
 
 export default createBrowserRouter([
   {
@@ -26,12 +31,40 @@ export default createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Navigate to="/home" replace />,
+        element: <Landing />,
       },
       {
-        path: '/home',
-        element: <Home />,
+        path: '/auth/:authType/:id?',
+        element: <Auth2 />,
       },
+      {
+        path: '/dashboard',
+        element: (
+          <Wrapper>
+            <Dashboard2 />
+          </Wrapper>
+        ),
+      },
+      {
+        path: '/members',
+        element: (
+          <Wrapper>
+            <Members2 />
+          </Wrapper>
+        ),
+      },
+      {
+        path: '/analytics',
+        element: (
+          <Wrapper>
+            <Analytics2 />
+          </Wrapper>
+        ),
+      },
+      // {
+      //   path: '/home',
+      //   element: <Home />,
+      // },
       {
         path: '*',
         element: <PageNotFound />,
