@@ -12,12 +12,26 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { useReverseGeocode } from '@/hooks/use-reverse-geocode'
+import { Separator } from '@/components/ui/separator'
+import { formatAliasToNormal } from '@/lib/format'
 
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+})
+
+const greenMarkerIcon = new L.Icon({
+  iconUrl:
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
 })
 
 const mockLocations = [
@@ -72,13 +86,37 @@ function MapView({ center, zoom }: { center: [number, number]; zoom: number }) {
   return null
 }
 
+function MapClickHandler({ onMapClick }: { onMapClick: (e: L.LeafletMouseEvent) => void }) {
+  const map = useMap()
+
+  useEffect(() => {
+    map.on('click', onMapClick)
+    return () => {
+      map.off('click', onMapClick)
+    }
+  }, [map, onMapClick])
+
+  return null
+}
+
 export default function SearchPlace() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedType, setSelectedType] = useState('all')
   const [mapView, setMapView] = useState<'street' | 'satellite'>('street')
-  const [selectedLocation, setSelectedLocation] = useState<(typeof mockLocations)[0] | null>(null)
+  const [selectedLocation, setSelectedLocation] = useState<any>(null)
   const [filteredLocations, setFilteredLocations] = useState(mockLocations)
+  const [userClickedLocation, setUserClickedLocation] = useState<any>(null)
   const mapRef = useRef<L.Map>(null)
+
+  const {
+    data: reverseGeocodeData,
+    isLoading,
+    error,
+  } = useReverseGeocode(
+    userClickedLocation?.lat.toString() || '',
+    userClickedLocation?.lng.toString() || '',
+    !!(userClickedLocation?.lat && userClickedLocation?.lng)
+  )
 
   useEffect(() => {
     const filtered = mockLocations.filter((location) => {
@@ -98,11 +136,21 @@ export default function SearchPlace() {
     }
   }
 
+  const handleMapClick = (e: L.LeafletMouseEvent) => {
+    const location = {
+      lat: e.latlng.lat,
+      lng: e.latlng.lng,
+    }
+    setUserClickedLocation(location)
+    setSelectedLocation(location)
+  }
+
   return (
     <div className="flex flex-col lg:flex-row h-screen">
       <div className="w-full lg:w-2/3 h-1/2 lg:h-full relative">
         <MapContainer center={[39.8283, -98.5795]} zoom={4} className="w-full h-full" ref={mapRef}>
           <MapBounds />
+          <MapClickHandler onMapClick={handleMapClick} />
           {selectedLocation && (
             <MapView center={[selectedLocation.lat, selectedLocation.lng]} zoom={13} />
           )}
@@ -119,6 +167,28 @@ export default function SearchPlace() {
                 : '&copy; <a href="https://www.esri.com/">Esri</a>'
             }
           />
+
+          {userClickedLocation && (
+            <Marker
+              position={[userClickedLocation.lat, userClickedLocation.lng]}
+              icon={greenMarkerIcon}
+            >
+              <Popup>
+                <div>
+                  <h3 className="font-bold">Selected Location</h3>
+                  <p>
+                    {reverseGeocodeData
+                      ? `${reverseGeocodeData.formatted}`
+                      : "can't track the location!"}
+                  </p>
+                  <span className="text-xs opacity-70">
+                    lat: {userClickedLocation.lat.toFixed(2)}, long:{' '}
+                    {userClickedLocation.lng.toFixed(2)}
+                  </span>
+                </div>
+              </Popup>
+            </Marker>
+          )}
 
           {filteredLocations.map((location) => (
             <Marker
@@ -139,7 +209,7 @@ export default function SearchPlace() {
         </MapContainer>
       </div>
 
-      <div className="w-full lg:w-1/3 h-1/2 lg:h-full p-4 overflow-y-auto bg-gray-50">
+      <div className="w-full lg:w-1/3 h-1/2 lg:h-full p-4 overflow-y-auto bg-opacity-500">
         <div className="space-y-4">
           <div className="space-y-2">
             <Input
@@ -174,34 +244,106 @@ export default function SearchPlace() {
             </div>
           </div>
 
+          {userClickedLocation && (
+            <>
+              <div className="space-y-2">
+                <h2 className="text-xl font-semibold">Current Selected Location</h2>
+                <Card
+                  className={`cursor-pointer transition-all ${
+                    selectedLocation?.id === userClickedLocation.id ? 'ring-2 ring-primary' : ''
+                  }`}
+                  onClick={() => handleLocationClick(userClickedLocation)}
+                >
+                  <CardHeader>
+                    <CardTitle>
+                      {reverseGeocodeData?.components?.suburb ??
+                        reverseGeocodeData?.formatted?.split(',')?.[0] ??
+                        'Finding out Location...'}
+                    </CardTitle>
+                    <CardDescription>
+                      lat: {userClickedLocation.lat.toFixed(3)}, long:{' '}
+                      {userClickedLocation.lng.toFixed(3)}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoading && (
+                      <p className="text-sm text-gray-600">Loading location details...</p>
+                    )}
+                    {error && (
+                      <p className="text-sm text-gray-600">
+                        {error?.message ?? 'Unable to get results for the location!'}
+                      </p>
+                    )}
+                    {reverseGeocodeData && (
+                      <div className="space-y-3">
+                        {reverseGeocodeData?.components?._category && (
+                          <Badge className="mr-2">
+                            {formatAliasToNormal(reverseGeocodeData.components._category)}
+                          </Badge>
+                        )}
+                        {reverseGeocodeData?.components?._type &&
+                          reverseGeocodeData?.components?._category !=
+                            reverseGeocodeData?.components?._type && (
+                            <Badge>
+                              {formatAliasToNormal(reverseGeocodeData.components._type)}
+                            </Badge>
+                          )}
+                        <p className="text-sm text-gray-600">{reverseGeocodeData.formatted}</p>
+                        {reverseGeocodeData.components && (
+                          <div className="text-sm text-gray-600">
+                            <p>
+                              {[
+                                reverseGeocodeData.components.city,
+                                reverseGeocodeData.components.state,
+                                reverseGeocodeData.components.country,
+                              ]
+                                .filter(Boolean)
+                                .join(', ')}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+              <Separator />
+            </>
+          )}
+
           <div className="space-y-4">
-            {filteredLocations.map((location) => (
-              <Card
-                key={location.id}
-                className={`cursor-pointer transition-all ${
-                  selectedLocation?.id === location.id ? 'ring-2 ring-primary' : ''
-                }`}
-                onClick={() => handleLocationClick(location)}
-              >
-                <CardHeader>
-                  <CardTitle>{location.name}</CardTitle>
-                  <CardDescription>{location.type}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600">{location.description}</p>
-                  <Button
-                    variant="outline"
-                    className="mt-2"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleLocationClick(location)
-                    }}
-                  >
-                    View on Map
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+            <h2 className="text-xl font-semibold">Search Results</h2>
+            {filteredLocations.length === 0 ? (
+              <p className="text-gray-500">No locations found matching your search criteria.</p>
+            ) : (
+              filteredLocations.map((location) => (
+                <Card
+                  key={location.id}
+                  className={`cursor-pointer transition-all ${
+                    selectedLocation?.id === location.id ? 'ring-2 ring-primary' : ''
+                  }`}
+                  onClick={() => handleLocationClick(location)}
+                >
+                  <CardHeader>
+                    <CardTitle>{location.name}</CardTitle>
+                    <CardDescription>{location.type}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600">{location.description}</p>
+                    <Button
+                      variant="outline"
+                      className="mt-2"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleLocationClick(location)
+                      }}
+                    >
+                      View on Map
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </div>
