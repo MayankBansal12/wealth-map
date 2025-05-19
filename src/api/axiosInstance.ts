@@ -36,7 +36,7 @@ const createAttomInstance = (apiURL: string) => {
 
   apiInstance.interceptors.request.use(
     (config) => {
-      config.params.apiKey = attomApiKey
+      config.headers.apikey = attomApiKey
       return config
     },
     (error) => Promise.reject(error)
