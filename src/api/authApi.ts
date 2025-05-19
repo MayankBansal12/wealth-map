@@ -1,10 +1,10 @@
 import { LoginRequest, LoginResponse, User } from '@/type/types'
-import api from './axiosInstance'
+import { mainApi } from './axiosInstance'
 import Cookies from 'js-cookie'
 
 export const loginUser = async (loginUser: LoginRequest): Promise<LoginResponse> => {
   try {
-    const { data } = await api.post<LoginResponse>('/admin/auth/login', loginUser)
+    const { data } = await mainApi.post<LoginResponse>('/admin/auth/login', loginUser)
     return data
   } catch (error: any) {
     throw new Error(error?.response?.data?.message || 'Error logging in, try again!')
@@ -13,7 +13,7 @@ export const loginUser = async (loginUser: LoginRequest): Promise<LoginResponse>
 
 export const fetchUser = async (): Promise<User> => {
   try {
-    const { data } = await api.get<User>('/admin')
+    const { data } = await mainApi.get<User>('/admin')
     return data
   } catch (error: any) {
     if (error?.response?.status === 401) {
