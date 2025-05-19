@@ -1,8 +1,11 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { AttomPropertyResponse } from '@/type/types'
+import { popularSearches } from '@/lib/mock-data'
+import { useInView } from 'react-intersection-observer'
+import { useEffect } from 'react'
+import { BookmarkIcon } from 'lucide-react'
 
 interface PropertySearchResultsProps {
   data: AttomPropertyResponse | undefined
@@ -10,6 +13,10 @@ interface PropertySearchResultsProps {
   error: Error | null
   onPropertyClick: (property: AttomPropertyResponse['property'][0]) => void
   selectedPropertyId?: number
+  onPopularSearchClick?: (lat: number, lng: number) => void
+  hasQueryParams: boolean
+  onLoadMore: () => void
+  hasMore: boolean
 }
 
 export function PropertySearchResults({
@@ -18,8 +25,40 @@ export function PropertySearchResults({
   error,
   onPropertyClick,
   selectedPropertyId,
+  onPopularSearchClick,
+  hasQueryParams,
+  onLoadMore,
+  hasMore,
 }: PropertySearchResultsProps) {
-  if (isLoading) {
+  const { ref, inView } = useInView()
+
+  useEffect(() => {
+    if (inView && hasMore && !isLoading) {
+      onLoadMore()
+    }
+  }, [inView, hasMore, isLoading, onLoadMore])
+
+  if (!hasQueryParams) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Popular Searches</h2>
+        {popularSearches.map((location) => (
+          <Card
+            key={location.id}
+            className="cursor-pointer hover:bg-accent/50 transition-colors"
+            onClick={() => onPopularSearchClick?.(location.lat, location.lng)}
+          >
+            <CardHeader>
+              <CardTitle>{location.name}</CardTitle>
+              <CardDescription>{location.description}</CardDescription>
+            </CardHeader>
+          </Card>
+        ))}
+      </div>
+    )
+  }
+
+  if (isLoading && !data?.property?.length) {
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
@@ -48,13 +87,13 @@ export function PropertySearchResults({
 
   return (
     <div className="space-y-4">
+      <h2 className="text-xl font-semibold">Search Results ({data?.status?.total ?? 0})</h2>
       {data.property.map((property) => (
         <Card
           key={property.identifier.Id}
           className={`cursor-pointer transition-all ${
             selectedPropertyId === property.identifier.Id ? 'ring-2 ring-primary' : ''
           }`}
-          onClick={() => onPropertyClick(property)}
         >
           <CardHeader>
             <CardTitle>{property.address.line1}</CardTitle>
@@ -62,27 +101,36 @@ export function PropertySearchResults({
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">{property.location.accuracy}</Badge>
-                <Badge variant="outline">{property.identifier.fips}</Badge>
-              </div>
               <p className="text-sm text-gray-600">
-                Last Modified: {new Date(property.vintage.lastModified).toLocaleDateString()}
+                Published: {new Date(property.vintage.pubDate).toLocaleDateString()} | Last
+                Modified: {new Date(property.vintage.lastModified).toLocaleDateString()}
               </p>
-              <Button
-                variant="outline"
-                className="mt-2"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onPropertyClick(property)
-                }}
-              >
-                View Details
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onPropertyClick(property)
+                  }}
+                >
+                  View Details
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    console.log('Bookmark property!')
+                  }}
+                >
+                  <BookmarkIcon className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
       ))}
+      {hasMore && <div ref={ref} className="h-10" />}
     </div>
   )
 }

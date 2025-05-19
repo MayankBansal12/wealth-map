@@ -1,0 +1,42 @@
+export const popularSearches = [
+  {
+    id: 1,
+    name: 'Manhattan, New York',
+    lat: 40.7831,
+    lng: -73.9712,
+    description: 'Popular residential and commercial area in NYC',
+    type: 'Residential',
+  },
+  {
+    id: 2,
+    name: 'Beverly Hills, California',
+    lat: 34.0901,
+    lng: -118.4065,
+    description: 'Luxury residential neighborhood in Los Angeles',
+    type: 'Luxury',
+  },
+  {
+    id: 3,
+    name: 'Miami Beach, Florida',
+    lat: 25.7907,
+    lng: -80.13,
+    description: 'Coastal residential and vacation properties',
+    type: 'Vacation',
+  },
+  {
+    id: 4,
+    name: 'Seattle Downtown',
+    lat: 47.6062,
+    lng: -122.3321,
+    description: 'Urban commercial and residential area',
+    type: 'Commercial',
+  },
+  {
+    id: 5,
+    name: 'Austin, Texas',
+    lat: 30.2672,
+    lng: -97.7431,
+    description: 'Growing tech hub with diverse properties',
+    type: 'Mixed',
+  },
+]

@@ -18,6 +18,7 @@ import { useFetchPropertyAddress } from '@/hooks/use-attom-data'
 import { SelectedLocationCard } from '@/components/selected-location-card'
 import { PropertySearchResults } from '@/components/property-search-results'
 import { propertyTypes } from '@/lib/constant'
+import { AttomPropertyData } from '@/type/types'
 
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -85,6 +86,8 @@ export default function SearchPlace() {
 
   const [mapView, setMapView] = useState<'street' | 'satellite'>('street')
   const [selectedProperty, setSelectedProperty] = useState<any>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [accumulatedResults, setAccumulatedResults] = useState<AttomPropertyData[]>([])
   const mapRef = useRef<L.Map>(null)
 
   const {
@@ -104,9 +107,19 @@ export default function SearchPlace() {
   } = useFetchPropertyAddress({
     postalcode: reverseGeocodeData?.components?.postcode || '',
     propertytype: selectedPropertyType === 'all' ? undefined : selectedPropertyType,
-    page: '1',
-    pagesize: '10',
+    page: currentPage.toString(),
+    pagesize: '20',
   })
+
+  useEffect(() => {
+    if (propertyData?.property) {
+      if (currentPage === 1) {
+        setAccumulatedResults(propertyData.property)
+      } else {
+        setAccumulatedResults((prev) => [...prev, ...propertyData.property])
+      }
+    }
+  }, [propertyData?.property, currentPage])
 
   const handleMapClick = (e: L.LeafletMouseEvent) => {
     const location = {
@@ -115,6 +128,8 @@ export default function SearchPlace() {
     }
     setUserClickedLocation(location)
     setSelectedProperty(null)
+    setCurrentPage(1)
+    setAccumulatedResults([])
   }
 
   const handlePropertyClick = (property: any) => {
@@ -126,6 +141,21 @@ export default function SearchPlace() {
       )
     }
   }
+
+  const handlePopularSearchClick = (lat: number, lng: number) => {
+    setUserClickedLocation({ lat, lng })
+    setCurrentPage(1)
+    setAccumulatedResults([])
+  }
+
+  const handleLoadMore = () => {
+    if (propertyData?.property?.length === 20) {
+      setCurrentPage((prev) => prev + 1)
+    }
+  }
+
+  const hasQueryParams = Boolean(userClickedLocation?.lat && userClickedLocation?.lng)
+  const hasMore = propertyData?.property?.length === 20
 
   return (
     <div className="flex flex-col lg:flex-row h-screen">
@@ -178,7 +208,7 @@ export default function SearchPlace() {
             </Marker>
           )}
 
-          {propertyData?.property?.map((property) => (
+          {accumulatedResults.map((property) => (
             <Marker
               key={property.identifier.Id}
               position={[
@@ -249,16 +279,17 @@ export default function SearchPlace() {
             </>
           )}
 
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Property Search Results</h2>
-            <PropertySearchResults
-              data={propertyData}
-              isLoading={isPropertyLoading}
-              error={propertyError}
-              onPropertyClick={handlePropertyClick}
-              selectedPropertyId={selectedProperty?.identifier?.Id}
-            />
-          </div>
+          <PropertySearchResults
+            data={propertyData ? { ...propertyData, property: accumulatedResults } : undefined}
+            isLoading={isPropertyLoading}
+            error={propertyError}
+            onPropertyClick={handlePropertyClick}
+            selectedPropertyId={selectedProperty?.identifier?.Id}
+            onPopularSearchClick={handlePopularSearchClick}
+            hasQueryParams={hasQueryParams}
+            onLoadMore={handleLoadMore}
+            hasMore={hasMore}
+          />
         </div>
       </div>
     </div>
