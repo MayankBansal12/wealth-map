@@ -6,5 +6,6 @@ export const useFetchPropertyAddress = (filters: AttomPropertyFilters) => {
   return useQuery<AttomPropertyResponse, Error>({
     queryKey: ['property-address', filters],
     queryFn: () => fetchPropertyForTypeAndPostCode(filters),
+    enabled: Boolean(filters.postalcode),
   })
 }

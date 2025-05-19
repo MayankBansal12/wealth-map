@@ -3,15 +3,15 @@ export interface ReverseGeocodeResponse {
     _category: string
     _type: string
     _normalized_city: string
-    borough: string
-    continent: string
-    country_code: string
-    house_number: string
+    borough?: string
+    continent?: string
+    country_code?: string
+    house_number?: string
     neighbourhood: string
-    office: string
-    political_union: string
-    postcode: string
-    road: string
+    office?: string
+    political_union?: string
+    postcode?: string
+    road?: string
     state_code: string
     suburb: string
     city: string

@@ -11,11 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { useReverseGeocode } from '@/hooks/use-reverse-geocode'
 import { Separator } from '@/components/ui/separator'
-import { formatAliasToNormal } from '@/lib/format'
+import { usePropertySearch } from '@/hooks/use-property-search'
+import { useFetchPropertyAddress } from '@/hooks/use-attom-data'
+import { SelectedLocationCard } from '@/components/selected-location-card'
+import { PropertySearchResults } from '@/components/property-search-results'
+import { propertyTypes } from '@/lib/constant'
 
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -34,34 +36,6 @@ const greenMarkerIcon = new L.Icon({
   shadowSize: [41, 41],
 })
 
-const mockLocations = [
-  {
-    id: 1,
-    name: 'Golden Gate Bridge',
-    description: 'Iconic suspension bridge in San Francisco',
-    lat: 37.8199,
-    lng: -122.4783,
-    type: 'landmark',
-  },
-  {
-    id: 2,
-    name: 'Central Park',
-    description: 'Urban park in New York City',
-    lat: 40.7829,
-    lng: -73.9654,
-    type: 'park',
-  },
-  {
-    id: 3,
-    name: 'Grand Canyon',
-    description: 'Steep-sided canyon carved by the Colorado River',
-    lat: 36.0544,
-    lng: -112.1401,
-    type: 'natural',
-  },
-]
-
-// Map bounds for US
 const US_BOUNDS = L.latLngBounds(L.latLng(24.396308, -125.0), L.latLng(49.384358, -66.93457))
 
 function MapBounds() {
@@ -100,41 +74,39 @@ function MapClickHandler({ onMapClick }: { onMapClick: (e: L.LeafletMouseEvent) 
 }
 
 export default function SearchPlace() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedType, setSelectedType] = useState('all')
+  const {
+    userClickedLocation,
+    setUserClickedLocation,
+    selectedPropertyType,
+    setSelectedPropertyType,
+    searchQuery,
+    setSearchQuery,
+  } = usePropertySearch()
+
   const [mapView, setMapView] = useState<'street' | 'satellite'>('street')
-  const [selectedLocation, setSelectedLocation] = useState<any>(null)
-  const [filteredLocations, setFilteredLocations] = useState(mockLocations)
-  const [userClickedLocation, setUserClickedLocation] = useState<any>(null)
+  const [selectedProperty, setSelectedProperty] = useState<any>(null)
   const mapRef = useRef<L.Map>(null)
 
   const {
     data: reverseGeocodeData,
-    isLoading,
-    error,
+    isLoading: isReverseGeocodeLoading,
+    error: reverseGeocodeError,
   } = useReverseGeocode(
     userClickedLocation?.lat.toString() || '',
     userClickedLocation?.lng.toString() || '',
     !!(userClickedLocation?.lat && userClickedLocation?.lng)
   )
 
-  useEffect(() => {
-    const filtered = mockLocations.filter((location) => {
-      const matchesSearch =
-        location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        location.description.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesType = selectedType === 'all' || location.type === selectedType
-      return matchesSearch && matchesType
-    })
-    setFilteredLocations(filtered)
-  }, [searchQuery, selectedType])
-
-  const handleLocationClick = (location: (typeof mockLocations)[0]) => {
-    setSelectedLocation(location)
-    if (mapRef.current) {
-      mapRef.current.setView([location.lat, location.lng], 13)
-    }
-  }
+  const {
+    data: propertyData,
+    isLoading: isPropertyLoading,
+    error: propertyError,
+  } = useFetchPropertyAddress({
+    postalcode: reverseGeocodeData?.components?.postcode || '',
+    propertytype: selectedPropertyType === 'all' ? undefined : selectedPropertyType,
+    page: '1',
+    pagesize: '10',
+  })
 
   const handleMapClick = (e: L.LeafletMouseEvent) => {
     const location = {
@@ -142,7 +114,17 @@ export default function SearchPlace() {
       lng: e.latlng.lng,
     }
     setUserClickedLocation(location)
-    setSelectedLocation(location)
+    setSelectedProperty(null)
+  }
+
+  const handlePropertyClick = (property: any) => {
+    setSelectedProperty(property)
+    if (mapRef.current) {
+      mapRef.current.setView(
+        [parseFloat(property.location.latitude), parseFloat(property.location.longitude)],
+        15
+      )
+    }
   }
 
   return (
@@ -151,8 +133,14 @@ export default function SearchPlace() {
         <MapContainer center={[39.8283, -98.5795]} zoom={4} className="w-full h-full" ref={mapRef}>
           <MapBounds />
           <MapClickHandler onMapClick={handleMapClick} />
-          {selectedLocation && (
-            <MapView center={[selectedLocation.lat, selectedLocation.lng]} zoom={13} />
+          {selectedProperty && (
+            <MapView
+              center={[
+                parseFloat(selectedProperty.location.latitude),
+                parseFloat(selectedProperty.location.longitude),
+              ]}
+              zoom={15}
+            />
           )}
 
           <TileLayer
@@ -190,18 +178,21 @@ export default function SearchPlace() {
             </Marker>
           )}
 
-          {filteredLocations.map((location) => (
+          {propertyData?.property?.map((property) => (
             <Marker
-              key={location.id}
-              position={[location.lat, location.lng]}
+              key={property.identifier.Id}
+              position={[
+                parseFloat(property.location.latitude),
+                parseFloat(property.location.longitude),
+              ]}
               eventHandlers={{
-                click: () => setSelectedLocation(location),
+                click: () => handlePropertyClick(property),
               }}
             >
               <Popup>
                 <div>
-                  <h3 className="font-bold">{location.name}</h3>
-                  <p>{location.description}</p>
+                  <h3 className="font-bold">{property.address.line1}</h3>
+                  <p>{property.address.line2}</p>
                 </div>
               </Popup>
             </Marker>
@@ -217,15 +208,17 @@ export default function SearchPlace() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Select value={selectedType} onValueChange={setSelectedType}>
+            <Select value={selectedPropertyType} onValueChange={setSelectedPropertyType}>
               <SelectTrigger>
-                <SelectValue placeholder="Filter by type" />
+                <SelectValue placeholder="Filter by property type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="landmark">Landmarks</SelectItem>
-                <SelectItem value="park">Parks</SelectItem>
-                <SelectItem value="natural">Natural</SelectItem>
+                {propertyTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <div className="flex space-x-2">
@@ -246,104 +239,25 @@ export default function SearchPlace() {
 
           {userClickedLocation && (
             <>
-              <div className="space-y-2">
-                <h2 className="text-xl font-semibold">Current Selected Location</h2>
-                <Card
-                  className={`cursor-pointer transition-all ${
-                    selectedLocation?.id === userClickedLocation.id ? 'ring-2 ring-primary' : ''
-                  }`}
-                  onClick={() => handleLocationClick(userClickedLocation)}
-                >
-                  <CardHeader>
-                    <CardTitle>
-                      {reverseGeocodeData?.components?.suburb ??
-                        reverseGeocodeData?.formatted?.split(',')?.[0] ??
-                        'Finding out Location...'}
-                    </CardTitle>
-                    <CardDescription>
-                      lat: {userClickedLocation.lat.toFixed(3)}, long:{' '}
-                      {userClickedLocation.lng.toFixed(3)}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoading && (
-                      <p className="text-sm text-gray-600">Loading location details...</p>
-                    )}
-                    {error && (
-                      <p className="text-sm text-gray-600">
-                        {error?.message ?? 'Unable to get results for the location!'}
-                      </p>
-                    )}
-                    {reverseGeocodeData && (
-                      <div className="space-y-3">
-                        {reverseGeocodeData?.components?._category && (
-                          <Badge className="mr-2">
-                            {formatAliasToNormal(reverseGeocodeData.components._category)}
-                          </Badge>
-                        )}
-                        {reverseGeocodeData?.components?._type &&
-                          reverseGeocodeData?.components?._category !=
-                            reverseGeocodeData?.components?._type && (
-                            <Badge>
-                              {formatAliasToNormal(reverseGeocodeData.components._type)}
-                            </Badge>
-                          )}
-                        <p className="text-sm text-gray-600">{reverseGeocodeData.formatted}</p>
-                        {reverseGeocodeData.components && (
-                          <div className="text-sm text-gray-600">
-                            <p>
-                              {[
-                                reverseGeocodeData.components.city,
-                                reverseGeocodeData.components.state,
-                                reverseGeocodeData.components.country,
-                              ]
-                                .filter(Boolean)
-                                .join(', ')}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
+              <SelectedLocationCard
+                reverseGeocodeData={reverseGeocodeData}
+                userClickedLocation={userClickedLocation}
+                isLoading={isReverseGeocodeLoading}
+                error={reverseGeocodeError}
+              />
               <Separator />
             </>
           )}
 
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Search Results</h2>
-            {filteredLocations.length === 0 ? (
-              <p className="text-gray-500">No locations found matching your search criteria.</p>
-            ) : (
-              filteredLocations.map((location) => (
-                <Card
-                  key={location.id}
-                  className={`cursor-pointer transition-all ${
-                    selectedLocation?.id === location.id ? 'ring-2 ring-primary' : ''
-                  }`}
-                  onClick={() => handleLocationClick(location)}
-                >
-                  <CardHeader>
-                    <CardTitle>{location.name}</CardTitle>
-                    <CardDescription>{location.type}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-gray-600">{location.description}</p>
-                    <Button
-                      variant="outline"
-                      className="mt-2"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleLocationClick(location)
-                      }}
-                    >
-                      View on Map
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))
-            )}
+            <h2 className="text-xl font-semibold">Property Search Results</h2>
+            <PropertySearchResults
+              data={propertyData}
+              isLoading={isPropertyLoading}
+              error={propertyError}
+              onPropertyClick={handlePropertyClick}
+              selectedPropertyId={selectedProperty?.identifier?.Id}
+            />
           </div>
         </div>
       </div>

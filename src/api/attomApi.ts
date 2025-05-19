@@ -6,9 +6,9 @@ export const fetchPropertyForTypeAndPostCode = async (
 ): Promise<AttomPropertyResponse> => {
   try {
     const response = await attomApi.get('/property/address', { params: filters })
-    console.log('response from attom API for filters:', filters, response)
     return response.data
   } catch (error: any) {
+    if (error?.response?.data?.status?.msg === 'SuccessWithoutResult') return error?.response?.data
     throw new Error(error?.response?.data?.message || 'Error fetching properties, try again!')
   }
 }
