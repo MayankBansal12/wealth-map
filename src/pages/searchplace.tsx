@@ -57,7 +57,10 @@ function MapView({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap()
 
   useEffect(() => {
-    map.setView(center, zoom)
+    map.setView(center, zoom, {
+      animate: true,
+      duration: 0.5,
+    })
   }, [center, zoom, map])
 
   return null
@@ -90,6 +93,7 @@ export default function SearchPlace() {
   const [mapView, setMapView] = useState<'street' | 'satellite'>('street')
   const [selectedProperty, setSelectedProperty] = useState<AttomPropertyData | null>(null)
   const mapRef = useRef<L.Map>(null)
+  // const popupRef = useRef<L.Popup | null>(null)
 
   const {
     data: reverseGeocodeData,
@@ -122,21 +126,77 @@ export default function SearchPlace() {
     }
     setUserClickedLocation(location)
     setSelectedProperty(null)
+
+    // Zoom to the clicked location with animation
+    if (mapRef.current) {
+      mapRef.current.setView([location.lat, location.lng], 15, {
+        animate: true,
+        duration: 0.5,
+      })
+
+      // Ensure the marker's popup opens after a short delay
+      setTimeout(() => {
+        mapRef.current?.eachLayer((layer) => {
+          if (layer instanceof L.Marker) {
+            const markerLat = layer.getLatLng().lat
+            const markerLng = layer.getLatLng().lng
+            if (markerLat === location.lat && markerLng === location.lng) {
+              layer.openPopup()
+            }
+          }
+        })
+      }, 100)
+    }
   }
 
   const handlePropertyClick = (property: AttomPropertyData) => {
     setSelectedProperty(property)
+    const lat = parseFloat(property.location.latitude)
+    const lng = parseFloat(property.location.longitude)
+
     if (mapRef.current) {
-      mapRef.current.setView(
-        [parseFloat(property.location.latitude), parseFloat(property.location.longitude)],
-        15
-      )
+      mapRef.current.setView([lat, lng], 15, {
+        animate: true,
+        duration: 0.5,
+      })
+
+      setTimeout(() => {
+        mapRef.current?.eachLayer((layer) => {
+          if (layer instanceof L.Marker) {
+            const markerLat = layer.getLatLng().lat
+            const markerLng = layer.getLatLng().lng
+            if (markerLat === lat && markerLng === lng) {
+              layer.openPopup()
+            }
+          }
+        })
+      }, 100)
     }
   }
 
   const handlePopularSearchClick = (lat: number, lng: number) => {
     setUserClickedLocation({ lat, lng })
     setSelectedProperty(null)
+
+    // Zoom to the location with animation and open popup
+    if (mapRef.current) {
+      mapRef.current.setView([lat, lng], 15, {
+        animate: true,
+        duration: 0.5,
+      })
+
+      setTimeout(() => {
+        mapRef.current?.eachLayer((layer) => {
+          if (layer instanceof L.Marker) {
+            const markerLat = layer.getLatLng().lat
+            const markerLng = layer.getLatLng().lng
+            if (markerLat === lat && markerLng === lng) {
+              layer.openPopup()
+            }
+          }
+        })
+      }, 100)
+    }
   }
 
   const handleLoadMore = () => {
