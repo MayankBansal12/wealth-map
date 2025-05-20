@@ -19,6 +19,8 @@ import { SelectedLocationCard } from '@/components/selected-location-card'
 import { PropertySearchResults } from '@/components/property-search-results'
 import { propertyTypes } from '@/lib/constant'
 import { AttomPropertyData } from '@/type/types'
+import { useGeocodeSearch } from '@/hooks/use-geocode-search'
+import { GeocodeSuggestions } from '@/components/geocode-suggestions'
 
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -80,9 +82,10 @@ export default function SearchPlace() {
     setUserClickedLocation,
     selectedPropertyType,
     setSelectedPropertyType,
-    searchQuery,
     setSearchQuery,
   } = usePropertySearch()
+
+  const { query, setQuery, results, isLoading, error } = useGeocodeSearch({})
 
   const [mapView, setMapView] = useState<'street' | 'satellite'>('street')
   const [selectedProperty, setSelectedProperty] = useState<AttomPropertyData | null>(null)
@@ -144,6 +147,13 @@ export default function SearchPlace() {
 
   const hasQueryParams = Boolean(userClickedLocation?.lat && userClickedLocation?.lng)
   const allProperties = propertyData?.pages.flatMap((page) => page.property) ?? []
+
+  const handleGeocodeSelect = (feature: any) => {
+    const [lng, lat] = feature.geometry.coordinates
+    setUserClickedLocation({ lat, lng })
+    setQuery('')
+    setSearchQuery('')
+  }
 
   return (
     <div className="flex flex-col lg:flex-row h-screen">
@@ -220,11 +230,21 @@ export default function SearchPlace() {
 
       <div className="w-full lg:w-1/3 h-1/2 lg:h-full p-4 space-y-4 overflow-y-auto bg-opacity-500">
         <div className="space-y-2">
-          <Input
-            placeholder="Search locations..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+          <div className="relative">
+            <Input
+              placeholder="Search places in North America..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            {(query || isLoading) && (
+              <GeocodeSuggestions
+                results={results}
+                isLoading={isLoading}
+                error={error}
+                onSelect={handleGeocodeSelect}
+              />
+            )}
+          </div>
           <Select value={selectedPropertyType} onValueChange={setSelectedPropertyType}>
             <SelectTrigger>
               <SelectValue placeholder="Filter by property type" />
