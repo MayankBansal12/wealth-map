@@ -85,9 +85,7 @@ export default function SearchPlace() {
   } = usePropertySearch()
 
   const [mapView, setMapView] = useState<'street' | 'satellite'>('street')
-  const [selectedProperty, setSelectedProperty] = useState<any>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [accumulatedResults, setAccumulatedResults] = useState<AttomPropertyData[]>([])
+  const [selectedProperty, setSelectedProperty] = useState<AttomPropertyData | null>(null)
   const mapRef = useRef<L.Map>(null)
 
   const {
@@ -104,22 +102,15 @@ export default function SearchPlace() {
     data: propertyData,
     isLoading: isPropertyLoading,
     error: propertyError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useFetchPropertyAddress({
     postalcode: reverseGeocodeData?.components?.postcode || '',
     propertytype: selectedPropertyType === 'all' ? undefined : selectedPropertyType,
-    page: currentPage.toString(),
-    pagesize: '20',
+    page: '1',
+    pagesize: '30',
   })
-
-  useEffect(() => {
-    if (propertyData?.property) {
-      if (currentPage === 1) {
-        setAccumulatedResults(propertyData.property)
-      } else {
-        setAccumulatedResults((prev) => [...prev, ...propertyData.property])
-      }
-    }
-  }, [propertyData?.property, currentPage])
 
   const handleMapClick = (e: L.LeafletMouseEvent) => {
     const location = {
@@ -128,11 +119,9 @@ export default function SearchPlace() {
     }
     setUserClickedLocation(location)
     setSelectedProperty(null)
-    setCurrentPage(1)
-    setAccumulatedResults([])
   }
 
-  const handlePropertyClick = (property: any) => {
+  const handlePropertyClick = (property: AttomPropertyData) => {
     setSelectedProperty(property)
     if (mapRef.current) {
       mapRef.current.setView(
@@ -144,18 +133,17 @@ export default function SearchPlace() {
 
   const handlePopularSearchClick = (lat: number, lng: number) => {
     setUserClickedLocation({ lat, lng })
-    setCurrentPage(1)
-    setAccumulatedResults([])
+    setSelectedProperty(null)
   }
 
   const handleLoadMore = () => {
-    if (propertyData?.property?.length === 20) {
-      setCurrentPage((prev) => prev + 1)
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
     }
   }
 
   const hasQueryParams = Boolean(userClickedLocation?.lat && userClickedLocation?.lng)
-  const hasMore = propertyData?.property?.length === 20
+  const allProperties = propertyData?.pages.flatMap((page) => page.property) ?? []
 
   return (
     <div className="flex flex-col lg:flex-row h-screen">
@@ -208,7 +196,7 @@ export default function SearchPlace() {
             </Marker>
           )}
 
-          {accumulatedResults.map((property) => (
+          {allProperties.map((property) => (
             <Marker
               key={property.identifier.Id}
               position={[
@@ -230,67 +218,73 @@ export default function SearchPlace() {
         </MapContainer>
       </div>
 
-      <div className="w-full lg:w-1/3 h-1/2 lg:h-full p-4 overflow-y-auto bg-opacity-500">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Input
-              placeholder="Search locations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Select value={selectedPropertyType} onValueChange={setSelectedPropertyType}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by property type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                {propertyTypes.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="flex space-x-2">
-              <Button
-                variant={mapView === 'street' ? 'default' : 'outline'}
-                onClick={() => setMapView('street')}
-              >
-                Standard View
-              </Button>
-              <Button
-                variant={mapView === 'satellite' ? 'default' : 'outline'}
-                onClick={() => setMapView('satellite')}
-              >
-                Satellite View
-              </Button>
-            </div>
-          </div>
-
-          {userClickedLocation && (
-            <>
-              <SelectedLocationCard
-                reverseGeocodeData={reverseGeocodeData}
-                userClickedLocation={userClickedLocation}
-                isLoading={isReverseGeocodeLoading}
-                error={reverseGeocodeError}
-              />
-              <Separator />
-            </>
-          )}
-
-          <PropertySearchResults
-            data={propertyData ? { ...propertyData, property: accumulatedResults } : undefined}
-            isLoading={isPropertyLoading}
-            error={propertyError}
-            onPropertyClick={handlePropertyClick}
-            selectedPropertyId={selectedProperty?.identifier?.Id}
-            onPopularSearchClick={handlePopularSearchClick}
-            hasQueryParams={hasQueryParams}
-            onLoadMore={handleLoadMore}
-            hasMore={hasMore}
+      <div className="w-full lg:w-1/3 h-1/2 lg:h-full p-4 space-y-4 overflow-y-auto bg-opacity-500">
+        <div className="space-y-2">
+          <Input
+            placeholder="Search locations..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
+          <Select value={selectedPropertyType} onValueChange={setSelectedPropertyType}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by property type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              {propertyTypes.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="flex space-x-2">
+            <Button
+              variant={mapView === 'street' ? 'default' : 'outline'}
+              onClick={() => setMapView('street')}
+            >
+              Standard View
+            </Button>
+            <Button
+              variant={mapView === 'satellite' ? 'default' : 'outline'}
+              onClick={() => setMapView('satellite')}
+            >
+              Satellite View
+            </Button>
+          </div>
         </div>
+
+        {userClickedLocation && (
+          <>
+            <SelectedLocationCard
+              reverseGeocodeData={reverseGeocodeData}
+              userClickedLocation={userClickedLocation}
+              isLoading={isReverseGeocodeLoading}
+              error={reverseGeocodeError}
+            />
+            <Separator />
+          </>
+        )}
+
+        <PropertySearchResults
+          data={
+            propertyData?.pages[0]
+              ? {
+                  status: propertyData.pages[0].status,
+                  property: allProperties,
+                }
+              : undefined
+          }
+          isLoading={isPropertyLoading}
+          error={propertyError}
+          onPropertyClick={handlePropertyClick}
+          selectedPropertyId={selectedProperty?.identifier?.Id}
+          onPopularSearchClick={handlePopularSearchClick}
+          hasQueryParams={hasQueryParams}
+          onLoadMore={handleLoadMore}
+          hasMore={hasNextPage ?? false}
+          isFetchingNextPage={isFetchingNextPage}
+        />
       </div>
     </div>
   )

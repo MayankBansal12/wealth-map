@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { AttomPropertyResponse } from '@/type/types'
 import { popularSearches } from '@/lib/mock-data'
 import { useInView } from 'react-intersection-observer'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { BookmarkIcon } from 'lucide-react'
 
 interface PropertySearchResultsProps {
@@ -17,6 +17,7 @@ interface PropertySearchResultsProps {
   hasQueryParams: boolean
   onLoadMore: () => void
   hasMore: boolean
+  isFetchingNextPage?: boolean
 }
 
 export function PropertySearchResults({
@@ -29,14 +30,24 @@ export function PropertySearchResults({
   hasQueryParams,
   onLoadMore,
   hasMore,
+  isFetchingNextPage,
 }: PropertySearchResultsProps) {
-  const { ref, inView } = useInView()
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: '100px',
+  })
+  const fetchingRef = useRef(false)
 
   useEffect(() => {
-    if (inView && hasMore && !isLoading) {
+    if (inView && hasMore && !isLoading && !isFetchingNextPage && !fetchingRef.current) {
+      fetchingRef.current = true
       onLoadMore()
+
+      setTimeout(() => {
+        fetchingRef.current = false
+      }, 1000)
     }
-  }, [inView, hasMore, isLoading, onLoadMore])
+  }, [inView, hasMore, isLoading, onLoadMore, isFetchingNextPage])
 
   if (!hasQueryParams) {
     return (
@@ -91,9 +102,7 @@ export function PropertySearchResults({
       {data.property.map((property) => (
         <Card
           key={property.identifier.Id}
-          className={`cursor-pointer transition-all ${
-            selectedPropertyId === property.identifier.Id ? 'ring-2 ring-primary' : ''
-          }`}
+          className={`cursor-pointer transition-all ${selectedPropertyId === property.identifier.Id ? 'ring-2 ring-primary' : ''}`}
         >
           <CardHeader>
             <CardTitle>{property.address.line1}</CardTitle>
@@ -130,7 +139,22 @@ export function PropertySearchResults({
           </CardContent>
         </Card>
       ))}
-      {hasMore && <div ref={ref} className="h-10" />}
+      {hasMore && (
+        <div ref={ref} className="my-2">
+          {isFetchingNextPage && (
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-3 w-3/4" />
+                <Skeleton className="h-2 w-1/2" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-2 w-full" />
+                <Skeleton className="h-2 w-2/3 mt-2" />
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
     </div>
   )
 }

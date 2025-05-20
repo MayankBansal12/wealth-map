@@ -27,7 +27,7 @@ export interface AttomStatus {
   msg: string
   total: number
   page: number
-  pageSize: number
+  pagesize: number
   responseDateTime: Date
 }
 
