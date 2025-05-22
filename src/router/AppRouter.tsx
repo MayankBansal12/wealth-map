@@ -3,6 +3,7 @@ import CheckToken from '@/components/auth-protect/CheckToken'
 import Auth from '@/pages/auth'
 import Home from '@/pages/home'
 import PageNotFound from '@/pages/page-not-found'
+import PropertyDetails from '@/pages/property-details'
 import ResetPassword from '@/pages/ResetPassword'
 import SearchPlace from '@/pages/searchplace'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
@@ -36,6 +37,10 @@ export default createBrowserRouter([
       {
         path: '/searchplace',
         element: <SearchPlace />,
+      },
+      {
+        path: '/property/:id',
+        element: <PropertyDetails />,
       },
       {
         path: '*',
