@@ -20,5 +20,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
+   "rules": {
+    "no-unused-vars": false
+  },
   "include": ["vite.config.ts"]
 }

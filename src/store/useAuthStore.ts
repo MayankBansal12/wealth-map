@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware'
 
 type UserAuthStoreType = {
   user: User | null
-  setLoginUser: (userData: User) => void
+  setLoginUser: (userData: User | null) => void
   logoutUser: () => void
 }
 

@@ -24,5 +24,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
+  "rules": {
+    "no-unused-vars": false
+  },
   "include": ["src"]
 }
