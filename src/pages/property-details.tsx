@@ -2,6 +2,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import PropertyInfoTab from '@/components/property-info-tab'
 import { propertyData } from '@/mockProperty'
 import { transportationData } from '@/mockTransportation'
+import AdvancedInfoTab from '@/components/advanced-property-tab'
+import { advancedPropertyData } from '@/mockZillowData'
 
 const PropertyDetails = () => {
   return (
@@ -23,9 +25,7 @@ const PropertyDetails = () => {
         </TabsContent>
 
         <TabsContent value="advanced-info">
-          <div className="rounded-lg border p-8 text-center">
-            Advanced property information will be displayed here.
-          </div>
+          <AdvancedInfoTab propertyData={advancedPropertyData} />
         </TabsContent>
 
         <TabsContent value="ownership-details">
