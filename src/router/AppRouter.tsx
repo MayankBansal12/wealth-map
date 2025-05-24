@@ -17,6 +17,9 @@ import CompanyProfilePage from '@/pages/company/ProfilePage'
 import MemberDashboardPage from '@/pages/member/DashboardPage'
 import MemberProfilePage from '@/pages/member/ProfilePage'
 
+import PropertyDetails from '@/pages/property-details'
+import SearchPlace from '@/pages/searchplace'
+
 import NotFoundPage from '@/pages/page-not-found'
 
 const router = createBrowserRouter([
@@ -58,6 +61,8 @@ const router = createBrowserRouter([
       { path: '/member', element: <Navigate to="/member/dashboard" replace /> },
       { path: '/member/dashboard', element: <MemberDashboardPage /> },
       { path: '/member/profile', element: <MemberProfilePage /> },
+      { path: '/searchplace', element: <SearchPlace /> },
+      { path: '/property/:id', element: <PropertyDetails /> },
     ],
   },
   {
