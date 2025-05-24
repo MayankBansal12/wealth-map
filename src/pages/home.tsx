@@ -3,11 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { DollarSign, Users } from 'lucide-react'
 import Header from '@/components/Header'
-import { useToast } from '@/hooks/use-toast'
 
 const Home = () => {
-  const { toast } = useToast()
-
   return (
     <>
       <Header />
@@ -15,15 +12,7 @@ const Home = () => {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
           <div className="flex items-center space-x-2">
-            <Button
-              onClick={() =>
-                toast({
-                  description: 'Download option is not available currently!',
-                })
-              }
-            >
-              Download
-            </Button>
+            <Button>Download</Button>
           </div>
         </div>
         <Tabs defaultValue="overview" className="space-y-4 bg-background text-foreground">
