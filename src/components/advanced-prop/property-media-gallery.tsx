@@ -53,7 +53,7 @@ export function PropertyMediaGallery({ propertyData }: PropertyMediaGalleryProps
         )}
 
         {photos.length > 0 && (
-          <ScrollArea className="w-full whitespace-nowrap">
+          <ScrollArea className="w-[85vw] whitespace-nowrap">
             <div className="flex gap-2 pb-4">
               {photos.map((photo: any, index: number) => (
                 <div

@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
-import { LayoutDashboard, Users, Bookmark, FileText, LogOut, Menu } from 'lucide-react'
+import { LayoutDashboard, Users, Bookmark, FileText, LogOut, Menu, Search } from 'lucide-react'
 import { ThemeSwitch } from '../ThemeSwitch'
 import {
   AlertDialog,
@@ -43,6 +43,7 @@ const DashboardLayout = () => {
 
   const memberLinks = [
     { to: `${basePath}/dashboard`, icon: <LayoutDashboard size={20} />, label: 'Workspace' },
+    { to: `${basePath}/searchplace`, icon: <Search size={20} />, label: 'SearchPlace' },
     { to: `${basePath}/bookmarks`, icon: <Bookmark size={20} />, label: 'Bookmarks' },
     { to: `${basePath}/reports`, icon: <FileText size={20} />, label: 'Reports' },
   ]
@@ -62,7 +63,7 @@ const DashboardLayout = () => {
   return (
     <div className="min-h-screen bg-background flex">
       <aside
-        className={`fixed top-0 left-0 h-full z-30 transition-all duration-300 ease-in-out
+        className={`fixed top-0 left-0 h-full px-2 z-30 transition-all duration-300 ease-in-out
           ${expanded ? 'w-64' : 'w-16'}
           bg-card border-r
           hidden md:flex flex-col justify-between
