@@ -5,13 +5,14 @@ import { AttomPropertyResponse } from '@/type/types'
 import { popularSearches } from '@/lib/mock-data'
 import { useInView } from 'react-intersection-observer'
 import { useEffect, useRef } from 'react'
-import { BookmarkIcon } from 'lucide-react'
+import { BookmarkIcon, SquareArrowUpRight } from 'lucide-react'
 
 interface PropertySearchResultsProps {
   data: AttomPropertyResponse | undefined
   isLoading: boolean
   error: Error | null
   onPropertyClick: (property: AttomPropertyResponse['property'][0]) => void
+  onViewDetails?: (property: AttomPropertyResponse['property'][0]) => void
   selectedPropertyId?: number
   onPopularSearchClick?: (lat: number, lng: number) => void
   hasQueryParams: boolean
@@ -25,6 +26,7 @@ export function PropertySearchResults({
   isLoading,
   error,
   onPropertyClick,
+  onViewDetails,
   selectedPropertyId,
   onPopularSearchClick,
   hasQueryParams,
@@ -93,7 +95,11 @@ export function PropertySearchResults({
   }
 
   if (data?.status?.msg === 'SuccessWithoutResult' || !data?.property?.length) {
-    return <div className="text-gray-500">No properties found for that postal area/code</div>
+    return (
+      <div className="text-gray-500 h-1/4 flex items-center justify-center">
+        No properties found for that postal area/code
+      </div>
+    )
   }
 
   return (
@@ -103,6 +109,10 @@ export function PropertySearchResults({
         <Card
           key={property.identifier.Id}
           className={`cursor-pointer transition-all ${selectedPropertyId === property.identifier.Id ? 'ring-2 ring-primary' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation()
+            onPropertyClick(property)
+          }}
         >
           <CardHeader>
             <CardTitle>{property.address.line1}</CardTitle>
@@ -119,10 +129,15 @@ export function PropertySearchResults({
                   variant="outline"
                   onClick={(e) => {
                     e.stopPropagation()
-                    onPropertyClick(property)
+                    if (onViewDetails) {
+                      onViewDetails(property)
+                    } else {
+                      onPropertyClick(property)
+                    }
                   }}
                 >
                   View Details
+                  <SquareArrowUpRight />
                 </Button>
                 <Button
                   variant="ghost"
