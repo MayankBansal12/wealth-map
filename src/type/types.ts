@@ -144,3 +144,67 @@ export interface AttomPropertyResponse {
   status: AttomStatus
   property: AttomPropertyData[]
 }
+
+export interface AttomPropertyDetailReqParam {
+  address1: string
+  address2: string
+}
+
+export interface AttomPropertyDetailResponse {
+  status: AttomStatus
+  property: [AttomPropertyExpandedProfile]
+}
+
+export interface AttomPropertyExpandedProfile {
+  identifier: {
+    Id: number
+    attomId: number
+    apn: string
+    fips: string
+  }
+  lot: object
+  area: object
+  address: object
+  summary: object
+  utilities?: object
+  sale?: object
+  building?: object
+  assessment?: object
+  vintage: {
+    lastModified: string
+    pubDate: string
+  }
+}
+
+export interface AttomPropertyTransporationResponse {
+  status: AttomStatus
+  transportationNoise: {
+    attomId: string
+    lat: string
+    lng: string
+    road_noise: AttomNoiseSource
+    aviation_noise: AttomNoiseSource
+    emg_vehicle_noise: AttomNoiseSource
+    rail_whistle_noise: AttomNoiseSource
+    rail_noise: AttomNoiseSource
+    overall_summary: string
+    disclaimer_text: string
+  }
+}
+
+interface AttomNoiseSource {
+  level: number
+  level_description: string
+  noise_sources: object[]
+}
+
+export interface AttomPropertyCommunityResponse {
+  status: AttomStatus
+  community: {
+    demographics: object
+    crime: object
+    airQuality: object
+    climate: object
+    naturalDisasters: object
+  }
+}
