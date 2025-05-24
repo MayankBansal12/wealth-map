@@ -217,7 +217,7 @@ export default function SearchPlace() {
 
   return (
     <div className="flex flex-col lg:flex-row h-screen">
-      <div className="w-full lg:w-2/3 h-1/2 lg:h-full relative">
+      <div className="w-full lg:w-2/3 h-1/2 lg:h-full relative z-0">
         <MapContainer center={[39.8283, -98.5795]} zoom={4} className="w-full h-full" ref={mapRef}>
           <MapBounds />
           <MapClickHandler onMapClick={handleMapClick} />

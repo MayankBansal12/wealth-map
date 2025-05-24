@@ -61,8 +61,8 @@ const router = createBrowserRouter([
       { path: '/member', element: <Navigate to="/member/dashboard" replace /> },
       { path: '/member/dashboard', element: <MemberDashboardPage /> },
       { path: '/member/profile', element: <MemberProfilePage /> },
-      { path: '/searchplace', element: <SearchPlace /> },
-      { path: '/property/:id', element: <PropertyDetails /> },
+      { path: '/member/searchplace', element: <SearchPlace /> },
+      { path: '/member/property/:id', element: <PropertyDetails /> },
     ],
   },
   {
