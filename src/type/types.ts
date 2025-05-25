@@ -132,7 +132,9 @@ export interface AttomPropertyData {
     latitude: string
     longitude: string
     geoid: string
-    geoIdV4: object
+    geoIdV4: {
+      [key: string]: any
+    }
   }
   vintage: {
     lastModified: string
@@ -146,8 +148,8 @@ export interface AttomPropertyResponse {
 }
 
 export interface AttomPropertyDetailReqParam {
-  address1: string
-  address2: string
+  address1?: string
+  address2?: string
 }
 
 export interface AttomPropertyDetailResponse {
@@ -162,14 +164,33 @@ export interface AttomPropertyExpandedProfile {
     apn: string
     fips: string
   }
-  lot: object
-  area: object
-  address: object
-  summary: object
-  utilities?: object
-  sale?: object
-  building?: object
-  assessment?: object
+  lot: {
+    [key: string]: any
+  }
+  area: {
+    [key: string]: any
+  }
+  address: {
+    [key: string]: any
+  }
+  location: {
+    [key: string]: any
+  }
+  summary: {
+    [key: string]: any
+  }
+  utilities?: {
+    [key: string]: any
+  }
+  sale?: {
+    [key: string]: any
+  }
+  building?: {
+    [key: string]: any
+  }
+  assessment?: {
+    [key: string]: any
+  }
   vintage: {
     lastModified: string
     pubDate: string
@@ -195,16 +216,28 @@ export interface AttomPropertyTransporationResponse {
 interface AttomNoiseSource {
   level: number
   level_description: string
-  noise_sources: object[]
+  noise_sources: {
+    [key: string]: any
+  }[]
 }
 
 export interface AttomPropertyCommunityResponse {
   status: AttomStatus
   community: {
-    demographics: object
-    crime: object
-    airQuality: object
-    climate: object
-    naturalDisasters: object
+    demographics: {
+      [key: string]: any
+    }
+    crime: {
+      [key: string]: any
+    }
+    airQuality: {
+      [key: string]: any
+    }
+    climate: {
+      [key: string]: any
+    }
+    naturalDisasters: {
+      [key: string]: any
+    }
   }
 }

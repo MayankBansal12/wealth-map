@@ -240,10 +240,12 @@ export default function SearchPlace() {
   const handleViewDetails = (property: AttomPropertyData) => {
     setShowTransitionModal(true)
     const params = new URLSearchParams({
-      oneLine: property.address.oneLine,
-      lat: property.location.latitude,
-      long: property.location.longitude,
-      zip: property.address.postal1,
+      lat: property?.location?.latitude,
+      long: property?.location?.longitude,
+      zip: property?.address?.postal1,
+      oneLine: property?.address?.oneLine,
+      line1: property?.address?.line1 ?? '',
+      line2: property?.address?.line2 ?? '',
     })
     if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current)
     transitionTimeoutRef.current = setTimeout(() => {

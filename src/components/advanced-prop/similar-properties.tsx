@@ -26,10 +26,10 @@ export function SimilarProperties({ propertyData }: SimilarPropertiesProps) {
               {similarProperties.map((property: any, index: number) => (
                 <div key={index} className="flex flex-col border rounded-md overflow-hidden">
                   <div className="relative h-40 w-full bg-muted">
-                    {property.miniCardPhotos && property.miniCardPhotos[0] ? (
+                    {property?.miniCardPhotos && property?.miniCardPhotos[0] ? (
                       <img
-                        src={property.miniCardPhotos[0].url || '/placeholder.svg'}
-                        alt={property.address.streetAddress}
+                        src={property?.miniCardPhotos[0]?.url || '/placeholder.svg'}
+                        alt={property?.address?.streetAddress}
                         className="h-full w-full object-cover"
                         onError={(e) => {
                           e.currentTarget.src = '/placeholder.svg?height=160&width=320'
@@ -42,7 +42,7 @@ export function SimilarProperties({ propertyData }: SimilarPropertiesProps) {
                     )}
                     <div className="absolute top-2 right-2">
                       <div className="bg-primary text-primary-foreground text-xs font-medium px-2 py-1 rounded-md">
-                        ${property.price.toLocaleString()}
+                        ${property?.price?.toLocaleString()}
                       </div>
                     </div>
                   </div>
@@ -50,25 +50,25 @@ export function SimilarProperties({ propertyData }: SimilarPropertiesProps) {
                     <div className="flex items-start gap-2">
                       <MapPin className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
                       <div>
-                        <div className="font-medium text-sm">{property.address.streetAddress}</div>
+                        <div className="font-medium text-sm">{property?.address.streetAddress}</div>
                         <div className="text-xs text-muted-foreground">
-                          {property.address.city}, {property.address.state}{' '}
-                          {property.address.zipcode}
+                          {property?.address?.city}, {property?.address?.state}{' '}
+                          {property?.address?.zipcode}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-1">
                         <Bed className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span>{property.bedrooms} bd</span>
+                        <span>{property?.bedrooms} bd</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Bath className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span>{property.bathrooms} ba</span>
+                        <span>{property?.bathrooms} ba</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Ruler className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span>{property.livingArea.toLocaleString()} sqft</span>
+                        <span>{property?.livingArea?.toLocaleString()} sqft</span>
                       </div>
                     </div>
                   </div>
