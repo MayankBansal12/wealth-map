@@ -13,6 +13,7 @@ dotenv.config()
 import authRoutes from './routes/auth.routes.js'
 import memberRoutes from './routes/member.routes.js'
 import profileRoutes from './routes/profile.routes.js'
+import propertyRoutes from './routes/property.routes.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/api/auth', authRoutes)
 app.use('/api/members', memberRoutes)
 app.use('/api/profile', profileRoutes)
+app.use('/api/property', propertyRoutes)
 
 app.get('/health', (req, res) => {
   res.status(200).json({

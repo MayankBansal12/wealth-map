@@ -20,6 +20,9 @@ import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
 import { AlertCircle } from 'lucide-react'
+const guestLoginLink = import.meta.env.VITE_MEMBER_LOGIN_LINK
+const testCompanyEmail = import.meta.env.VITE_COMPANY_EMAIL
+const testCompanyPassword = import.meta.env.VITE_COMPANY_PASSWORD
 
 type FormData = z.infer<typeof companyLoginSchema>
 
@@ -37,6 +40,7 @@ const LoginPage = () => {
       password: '',
     },
   })
+  const { setValue } = form
 
   const memberForm = useForm<FormData>({
     resolver: zodResolver(loginSchema),
@@ -65,11 +69,9 @@ const LoginPage = () => {
     try {
       const response = await authApi.memberLogin(data)
       if (response.data.token && response.data.user) {
-        // User is verified, log in and navigate
         login(response.data.token, response.data.user)
         navigate('/member/dashboard')
       } else {
-        // Not verified, magic link sent
         setEmailSent(true)
         setSentToEmail(data.email)
         toast.success('Magic link sent to email!', {
@@ -149,6 +151,16 @@ const LoginPage = () => {
                 Sign up
               </Link>
             </p>
+            <Button
+              variant="link"
+              onClick={() => {
+                setValue('email', testCompanyEmail)
+                setValue('password', testCompanyPassword)
+              }}
+              className="text-xs text-muted-foreground"
+            >
+              Use Test Login Credentials
+            </Button>
           </div>
         </TabsContent>
 
@@ -216,6 +228,15 @@ const LoginPage = () => {
 
             <div className="text-center text-xs text-muted-foreground">
               Members can&apos;t signup directly, they need to be invited by the company.
+            </div>
+            <div className="text-right">
+              <Button
+                variant="link"
+                onClick={() => (window.location.href = guestLoginLink)}
+                className="text-xs text-muted-foreground"
+              >
+                Guest Login to view demo
+              </Button>
             </div>
           </div>
         </TabsContent>

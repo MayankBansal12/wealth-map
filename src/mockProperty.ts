@@ -42,6 +42,24 @@ export const propertyData = {
         situsStreetName: 'WINONA',
         situsAddressSuffix: 'CT',
       },
+      location: {
+        accuracy: 'Rooftop',
+        latitude: '39.778926',
+        longitude: '-105.047775',
+        distance: 0,
+        geoid:
+          'CO08031, CS0891007, DB0803360, ND0000119198, ND0004861239, PL0820000, SB0000076114, SB0000076155, SB0000076161, SB0000135819, SB0000143772, ZI80212',
+        geoIdV4: {
+          CO: '1291dc1937525d78f89cebb6a43a50de',
+          CS: '4c0507d0d7894d2d48e4e03e1c0240fc',
+          DB: 'd8ca7ea08abbe9efdd7e3b78f23d120e',
+          N1: 'b26d02d9330761156fc0cfd4ed8bf9a1',
+          N2: '27e220314436f6edd5e606ddcd28156d',
+          PL: '7de845f7ba9b234a2c5adfca1db76c64',
+          SB: '9e0b497fb1337405c4dfe64e51568f68, 3b4cd5c56026e2e1f0e5c553b74cf05d, 93e5fef8956253c5642a335fc4a4395f, 3d0771574d56c6eae9184bc5aa3ebe19, 8a506b574561c5bab4f163492c7a386a',
+          ZI: '0149d0a55ef2d6b71071a39f4e13d6eb',
+        },
+      },
       summary: {
         archStyle: 'OTHER',
         absenteeInd: 'OWNER OCCUPIED',

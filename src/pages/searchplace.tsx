@@ -21,6 +21,7 @@ import { propertyTypes } from '@/lib/constant'
 import { AttomPropertyData } from '@/type/types'
 import { useGeocodeSearch } from '@/hooks/use-geocode-search'
 import { GeocodeSuggestions } from '@/components/geocode-suggestions'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -93,7 +94,8 @@ export default function SearchPlace() {
   const [mapView, setMapView] = useState<'street' | 'satellite'>('street')
   const [selectedProperty, setSelectedProperty] = useState<AttomPropertyData | null>(null)
   const mapRef = useRef<L.Map>(null)
-  // const popupRef = useRef<L.Popup | null>(null)
+  const [showTransitionModal, setShowTransitionModal] = useState(false)
+  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const {
     data: reverseGeocodeData,
@@ -174,11 +176,31 @@ export default function SearchPlace() {
     }
   }
 
+  const handleCurrentCardClick = (lat: number, lng: number) => {
+    if (mapRef.current) {
+      mapRef.current.setView([lat, lng], 15, {
+        animate: true,
+        duration: 0.5,
+      })
+
+      setTimeout(() => {
+        mapRef.current?.eachLayer((layer) => {
+          if (layer instanceof L.Marker) {
+            const markerLat = layer.getLatLng().lat
+            const markerLng = layer.getLatLng().lng
+            if (markerLat === lat && markerLng === lng) {
+              layer.openPopup()
+            }
+          }
+        })
+      }, 100)
+    }
+  }
+
   const handlePopularSearchClick = (lat: number, lng: number) => {
     setUserClickedLocation({ lat, lng })
     setSelectedProperty(null)
 
-    // Zoom to the location with animation and open popup
     if (mapRef.current) {
       mapRef.current.setView([lat, lng], 15, {
         animate: true,
@@ -215,9 +237,27 @@ export default function SearchPlace() {
     setSearchQuery('')
   }
 
+  const handleViewDetails = (property: AttomPropertyData) => {
+    setShowTransitionModal(true)
+    const params = new URLSearchParams({
+      lat: property?.location?.latitude,
+      long: property?.location?.longitude,
+      zip: property?.address?.postal1,
+      oneLine: property?.address?.oneLine,
+      line1: property?.address?.line1 ?? '',
+      line2: property?.address?.line2 ?? '',
+    })
+    if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current)
+    transitionTimeoutRef.current = setTimeout(() => {
+      setShowTransitionModal(false)
+
+      window.open(`/member/property/${property.identifier.attomId}?${params.toString()}`, '_blank')
+    }, 1000)
+  }
+
   return (
     <div className="flex flex-col lg:flex-row h-screen">
-      <div className="w-full lg:w-2/3 h-1/2 lg:h-full relative">
+      <div className="w-full lg:w-2/3 h-1/2 lg:h-full relative z-0">
         <MapContainer center={[39.8283, -98.5795]} zoom={4} className="w-full h-full" ref={mapRef}>
           <MapBounds />
           <MapClickHandler onMapClick={handleMapClick} />
@@ -337,6 +377,7 @@ export default function SearchPlace() {
         {userClickedLocation && (
           <>
             <SelectedLocationCard
+              onCardClick={handleCurrentCardClick}
               reverseGeocodeData={reverseGeocodeData}
               userClickedLocation={userClickedLocation}
               isLoading={isReverseGeocodeLoading}
@@ -358,6 +399,7 @@ export default function SearchPlace() {
           isLoading={isPropertyLoading}
           error={propertyError}
           onPropertyClick={handlePropertyClick}
+          onViewDetails={handleViewDetails}
           selectedPropertyId={selectedProperty?.identifier?.Id}
           onPopularSearchClick={handlePopularSearchClick}
           hasQueryParams={hasQueryParams}
@@ -365,6 +407,13 @@ export default function SearchPlace() {
           hasMore={hasNextPage ?? false}
           isFetchingNextPage={isFetchingNextPage}
         />
+        <Dialog open={showTransitionModal} onOpenChange={setShowTransitionModal}>
+          <DialogContent>
+            <div className="text-center text-lg font-handwriting p-8">
+              Opening up property details in new page...
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )

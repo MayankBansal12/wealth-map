@@ -14,7 +14,6 @@ export function PropertyMediaGallery({ propertyData }: PropertyMediaGalleryProps
       : null
   )
 
-  // Get all photos from the property data
   const photos = propertyData.originalPhotos || []
   const photoCount = propertyData.photoCount || 0
 
@@ -53,7 +52,7 @@ export function PropertyMediaGallery({ propertyData }: PropertyMediaGalleryProps
         )}
 
         {photos.length > 0 && (
-          <ScrollArea className="w-full whitespace-nowrap">
+          <ScrollArea className="whitespace-nowrap">
             <div className="flex gap-2 pb-4">
               {photos.map((photo: any, index: number) => (
                 <div

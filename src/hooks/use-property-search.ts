@@ -29,6 +29,7 @@ export const usePropertySearch = () => {
       searchParams.set('lng', userClickedLocation.lng.toString())
     }
     if (selectedPropertyType !== 'all') searchParams.set('propType', selectedPropertyType)
+    else searchParams.delete('propType')
     if (searchQuery) searchParams.set('q', searchQuery)
 
     setSearchParams(searchParams)

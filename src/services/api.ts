@@ -61,6 +61,12 @@ export const memberApi = {
   cancelInvitation: (memberId: string) => api.delete(`/members/invitation/${memberId}`),
 }
 
+export const propertyApi = {
+  getPropertyDetails: (id: string) => api.get(`/property/${id}`),
+
+  updateProperty: (id: string, data: any) => api.put(`/property/${id}`, data),
+}
+
 export const profileApi = {
   updateProfile: (data: Partial<MemberSetupRequest>) => api.put('/profile', data),
 }

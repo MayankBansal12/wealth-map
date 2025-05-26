@@ -6,12 +6,12 @@ interface ZestimateInfoProps {
 }
 
 export function ZestimateInfo({ propertyData }: ZestimateInfoProps) {
-  const zestimate = propertyData.zestimate
-  const zestimateLowPercent = propertyData.zestimateLowPercent
-    ? Number.parseFloat(propertyData.zestimateLowPercent)
+  const zestimate = propertyData?.zestimate
+  const zestimateLowPercent = propertyData?.zestimateLowPercent
+    ? Number.parseFloat(propertyData?.zestimateLowPercent)
     : 0
-  const zestimateHighPercent = propertyData.zestimateHighPercent
-    ? Number.parseFloat(propertyData.zestimateHighPercent)
+  const zestimateHighPercent = propertyData?.zestimateHighPercent
+    ? Number.parseFloat(propertyData?.zestimateHighPercent)
     : 0
 
   const lowEstimate = zestimate ? Math.round(zestimate * (1 - zestimateLowPercent / 100)) : null
@@ -34,7 +34,7 @@ export function ZestimateInfo({ propertyData }: ZestimateInfoProps) {
         {zestimate ? (
           <>
             <div className="text-center">
-              <div className="text-3xl font-bold">${zestimate.toLocaleString()}</div>
+              <div className="text-3xl font-bold">${zestimate?.toLocaleString()}</div>
               <div className="text-sm text-muted-foreground mt-1">Estimated Market Value</div>
             </div>
 
@@ -62,7 +62,7 @@ export function ZestimateInfo({ propertyData }: ZestimateInfoProps) {
               <div className="pt-4 border-t">
                 <div className="flex justify-between items-center">
                   <div className="text-sm text-muted-foreground">Last Sold Price</div>
-                  <div className="font-medium">${lastSoldPrice.toLocaleString()}</div>
+                  <div className="font-medium">${lastSoldPrice?.toLocaleString()}</div>
                 </div>
 
                 {priceDifference !== null && (

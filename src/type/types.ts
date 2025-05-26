@@ -132,7 +132,9 @@ export interface AttomPropertyData {
     latitude: string
     longitude: string
     geoid: string
-    geoIdV4: object
+    geoIdV4: {
+      [key: string]: any
+    }
   }
   vintage: {
     lastModified: string
@@ -143,4 +145,99 @@ export interface AttomPropertyData {
 export interface AttomPropertyResponse {
   status: AttomStatus
   property: AttomPropertyData[]
+}
+
+export interface AttomPropertyDetailReqParam {
+  address1?: string
+  address2?: string
+}
+
+export interface AttomPropertyDetailResponse {
+  status: AttomStatus
+  property: [AttomPropertyExpandedProfile]
+}
+
+export interface AttomPropertyExpandedProfile {
+  identifier: {
+    Id: number
+    attomId: number
+    apn: string
+    fips: string
+  }
+  lot: {
+    [key: string]: any
+  }
+  area: {
+    [key: string]: any
+  }
+  address: {
+    [key: string]: any
+  }
+  location: {
+    [key: string]: any
+  }
+  summary: {
+    [key: string]: any
+  }
+  utilities?: {
+    [key: string]: any
+  }
+  sale?: {
+    [key: string]: any
+  }
+  building?: {
+    [key: string]: any
+  }
+  assessment?: {
+    [key: string]: any
+  }
+  vintage: {
+    lastModified: string
+    pubDate: string
+  }
+}
+
+export interface AttomPropertyTransporationResponse {
+  status: AttomStatus
+  transportationNoise: {
+    attomId: string
+    lat: string
+    lng: string
+    road_noise: AttomNoiseSource
+    aviation_noise: AttomNoiseSource
+    emg_vehicle_noise: AttomNoiseSource
+    rail_whistle_noise: AttomNoiseSource
+    rail_noise: AttomNoiseSource
+    overall_summary: string
+    disclaimer_text: string
+  }
+}
+
+interface AttomNoiseSource {
+  level: number
+  level_description: string
+  noise_sources: {
+    [key: string]: any
+  }[]
+}
+
+export interface AttomPropertyCommunityResponse {
+  status: AttomStatus
+  community: {
+    demographics: {
+      [key: string]: any
+    }
+    crime: {
+      [key: string]: any
+    }
+    airQuality: {
+      [key: string]: any
+    }
+    climate: {
+      [key: string]: any
+    }
+    naturalDisasters: {
+      [key: string]: any
+    }
+  }
 }

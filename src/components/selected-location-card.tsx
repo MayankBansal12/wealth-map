@@ -4,6 +4,7 @@ import { formatAliasToNormal } from '@/lib/format'
 
 interface SelectedLocationCardProps {
   reverseGeocodeData: any
+  onCardClick: (lat: number, lng: number) => void
   userClickedLocation: { lat: number; lng: number }
   isLoading: boolean
   error: Error | null
@@ -11,12 +12,16 @@ interface SelectedLocationCardProps {
 
 export function SelectedLocationCard({
   reverseGeocodeData,
+  onCardClick,
   userClickedLocation,
   isLoading,
   error,
 }: SelectedLocationCardProps) {
   return (
-    <Card className="mb-4">
+    <Card
+      className="mb-4 cursor-pointer"
+      onClick={() => onCardClick(userClickedLocation.lat, userClickedLocation.lng)}
+    >
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">
           {reverseGeocodeData?.components?.suburb ??

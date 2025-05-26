@@ -5,36 +5,70 @@ import { PriceHistory } from '@/components/advanced-prop/price-history'
 import { SimilarProperties } from '@/components/advanced-prop/similar-properties'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Info } from 'lucide-react'
+import { useEffect } from 'react'
+import { useFetchAdvancedPropertyInfo } from '@/hooks/use-attom-data'
+import { useUpdatePropertyInfo } from '@/hooks/use-property-info'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface AdvancedInfoTabProps {
+  propertyId?: string
   propertyData: any
 }
 
-export default function AdvancedInfoTab({ propertyData }: AdvancedInfoTabProps) {
+export default function AdvancedInfoTab({ propertyId, propertyData }: AdvancedInfoTabProps) {
+  const shouldFetch = !propertyData && !!propertyId
+  const {
+    data: fetchedAdvanced,
+    isLoading,
+    error,
+  } = useFetchAdvancedPropertyInfo(propertyId ?? '', shouldFetch)
+  const updateProperty = useUpdatePropertyInfo()
+
+  useEffect(() => {
+    if (fetchedAdvanced && shouldFetch && propertyId) {
+      updateProperty.mutate({ id: propertyId, update: { advancedInfo: fetchedAdvanced } })
+    }
+  }, [fetchedAdvanced, shouldFetch, propertyId])
+
+  const finalAdvanced = propertyData || fetchedAdvanced
+
   return (
     <div className="space-y-6">
       <Alert variant="destructive" className="bg-amber-50 border-amber-200">
         <Info className="h-4 w-4 text-amber-600" />
         <AlertTitle className="text-amber-800">Data Source Information</AlertTitle>
         <AlertDescription className="text-amber-700 text-sm">
-          This information is sourced from third-party data providers and may not be completely
-          accurate or up-to-date. Please verify all information independently before making any
-          decisions.
+          This information is scrapped from third-party data providers. It might be slow and
+          unreliable and data may not be completely accurate or up-to-date. Please verify all
+          information independently before making any decisions.
         </AlertDescription>
       </Alert>
 
-      <PropertyMediaGallery propertyData={propertyData} />
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <PropertyFacts propertyData={propertyData} />
-          <PriceHistory propertyData={propertyData} />
+      {isLoading ? (
+        <div className="flex gap-2">
+          <h2>Fetching advanced data...it may time and might be unreliable</h2>
+          <Skeleton className="h-40 w-full my-4" />
         </div>
-        <div className="space-y-6">
-          <ZestimateInfo propertyData={propertyData} />
-          <SimilarProperties propertyData={propertyData} />
+      ) : error || (!isLoading && !finalAdvanced) ? (
+        <div className="text-center p-4 my-4 text-muted-foreground">
+          Advanced property details are not available for this property yet, we are working on
+          getting this data, sorry for the inconvenience!
         </div>
-      </div>
+      ) : (
+        <>
+          <PropertyMediaGallery propertyData={finalAdvanced} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <PropertyFacts propertyData={finalAdvanced} />
+              <PriceHistory propertyData={finalAdvanced} />
+            </div>
+            <div className="space-y-6">
+              <ZestimateInfo propertyData={finalAdvanced} />
+              <SimilarProperties propertyData={finalAdvanced} />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
