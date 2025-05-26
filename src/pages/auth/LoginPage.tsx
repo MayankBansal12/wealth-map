@@ -232,7 +232,7 @@ const LoginPage = () => {
             <div className="text-right">
               <Button
                 variant="link"
-                onClick={() => navigate(guestLoginLink)}
+                onClick={() => (window.location.href = guestLoginLink)}
                 className="text-xs text-muted-foreground"
               >
                 Guest Login to view demo
