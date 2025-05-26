@@ -16,6 +16,7 @@ import CompanyProfilePage from '@/pages/company/ProfilePage'
 
 import MemberDashboardPage from '@/pages/member/DashboardPage'
 import MemberProfilePage from '@/pages/member/ProfilePage'
+import BookMarkPage from '@/pages/member/BookMarkPage'
 
 import PropertyDetails from '@/pages/property-details'
 import SearchPlace from '@/pages/searchplace'
@@ -60,6 +61,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/member', element: <Navigate to="/member/dashboard" replace /> },
       { path: '/member/dashboard', element: <MemberDashboardPage /> },
+      { path: '/member/bookmarks', element: <BookMarkPage /> },
       { path: '/member/profile', element: <MemberProfilePage /> },
       { path: '/member/searchplace', element: <SearchPlace /> },
       { path: '/member/property/:id', element: <PropertyDetails /> },
