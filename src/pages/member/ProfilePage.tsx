@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
-import { Users } from 'lucide-react'
+import { Plus, Users } from 'lucide-react'
 import { toast } from 'sonner'
 
 type FormData = z.infer<typeof profileUpdateSchema>
@@ -36,7 +36,6 @@ const ProfilePage = () => {
     },
   })
 
-  // Placeholder for image upload handling
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -78,7 +77,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto my-4 space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
         <p className="text-muted-foreground">Manage your account settings</p>
@@ -107,19 +106,6 @@ const ProfilePage = () => {
                       htmlFor="profilePic"
                       className="absolute bottom-0 right-0 p-1 bg-primary text-primary-foreground rounded-full cursor-pointer"
                     >
-                      {/* <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M12 20h9"></path>
-                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                      </svg> */}
                       <input
                         id="profilePic"
                         type="file"
@@ -127,6 +113,7 @@ const ProfilePage = () => {
                         className="sr-only"
                         onChange={handleImageChange}
                       />
+                      <Plus className="w-5 h-5" />
                     </label>
                   </div>
                 </div>

@@ -15,7 +15,7 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <Building className="h-5 w-5" />
-            Corporate Owner Details
+            Company Details
             <Tooltip>
               <TooltipTrigger>
                 <Info className="h-4 w-4 text-muted-foreground" />

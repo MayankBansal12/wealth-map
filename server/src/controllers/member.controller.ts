@@ -1,6 +1,7 @@
 import { Response } from 'express'
 import randomstring from 'randomstring'
 import User from '../models/User.model.js'
+import Bookmark from '../models/Bookmark.model.js'
 import Invitation from '../models/Invitation.model.js'
 import { sendInvitationEmail } from '../utils/email.js'
 import { AuthRequest } from '../middleware/auth.middleware.js'
@@ -208,5 +209,44 @@ export const cancelInvitation = async (req: AuthRequest, res: Response): Promise
   } catch (error) {
     console.error('Cancel invitation error:', error)
     res.status(500).json({ message: 'Server error' })
+  }
+}
+
+export const getBookmarks = async (req: AuthRequest, res: Response) => {
+  try {
+    const bookmarks = await Bookmark.find({ userId: req.userId })
+    res.json(bookmarks)
+  } catch (err) {
+    console.error('Error fetching bookmarks', err)
+    res.status(500).json({ error: 'Failed to fetch bookmarks' })
+  }
+}
+
+export const addBookmark = async (req: AuthRequest, res: Response) => {
+  try {
+    const { property } = req.body
+    if (!property) return res.status(400).json({ error: 'Property is required' })
+    const exists = await Bookmark.findOne({
+      userId: req.userId,
+      'property.attomId': property.attomId,
+    })
+    if (exists) return res.status(409).json({ error: 'Already bookmarked' })
+    const bookmark = await Bookmark.create({ userId: req.userId, property })
+    res.status(201).json(bookmark)
+  } catch (err) {
+    console.error('Failed to add bookmarks', err)
+    res.status(500).json({ error: 'Failed to add bookmark' })
+  }
+}
+
+export const removeBookmark = async (req: AuthRequest, res: Response) => {
+  try {
+    const { bookmarkId } = req.params
+    const deleted = await Bookmark.findOneAndDelete({ _id: bookmarkId, userId: req.userId })
+    if (!deleted) return res.status(404).json({ error: 'Bookmark not found' })
+    res.json({ success: true })
+  } catch (err) {
+    console.error('Failed to remove bookmarks', err)
+    res.status(500).json({ error: 'Failed to remove bookmark' })
   }
 }

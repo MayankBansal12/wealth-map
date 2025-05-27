@@ -35,18 +35,18 @@ export default function OwnershipDetailsTab({ property }: OwnershipDetailsTabPro
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          {isIndividual && <IndividualOwnerProfile ownerDetailsData={mockOwnerDetails} />}
-
-          {isCorporate && (
-            <CorporateOwnerDetails owner={owner} companyDetailsData={mockCompanyData} />
-          )}
-        </div>
-
-        <div className="space-y-6">
-          {isIndividual && <WealthEstimateCard property={property} owner={owner} />}
-        </div>
+        {isIndividual && (
+          <>
+            <div className="lg:col-span-2">
+              <IndividualOwnerProfile ownerDetailsData={mockOwnerDetails} />
+            </div>
+            <div className="space-y-6">
+              <WealthEstimateCard property={property} owner={owner} />
+            </div>
+          </>
+        )}
       </div>
+      {isCorporate && <CorporateOwnerDetails owner={owner} companyDetailsData={mockCompanyData} />}
     </div>
   )
 }

@@ -49,7 +49,7 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-app.use((err: any, req: express.Request, res: express.Response) => {
+app.use((err: any, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err.stack)
   const status = err.statusCode ?? 500
   const message = err.message ?? 'Something went wrong'
