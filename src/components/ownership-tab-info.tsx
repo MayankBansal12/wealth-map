@@ -26,7 +26,7 @@ export default function OwnershipDetailsTab({
   const isCorporate = owner.corporateIndicator === 'Y' || owner.type === 'COMPANY'
   const propertyOwner = property?.ownerDetails ?? null
   const primaryOwnerName = owner?.['owner1']?.fullName
-  const propertyAddress = property?.propertyProfile?.address?.oneLine
+  const propertyAddress = property?.propertyProfile?.address?.line2
   const shouldFetch =
     !propertyOwner && !!property && !!owner && !!isIndividual && !!primaryOwnerName
   const {

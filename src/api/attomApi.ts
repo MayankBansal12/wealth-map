@@ -8,8 +8,7 @@ import {
 } from '@/type/types'
 import { attomApi } from './axiosInstance'
 import { formatZillowResponse } from '@/lib/formatZillowResponse'
-import { mockOwnerDetails } from '@/mockOwnerDetails'
-const ZILLOW_API_KEY = import.meta.env.VITE_ZILLOW_API_KEY
+const RAPID_API_KEY = import.meta.env.VITE_RAPID_API_KEY
 
 export const fetchPropertyForTypeAndPostCode = async (
   filters: AttomPropertyFilters
@@ -40,7 +39,6 @@ export const fetchPropertyDetail = async (
 export const fetchTrasportationForProperty = async (
   address: string
 ): Promise<AttomPropertyTransporationResponse> => {
-  console.log('fetching property transportation detail for ', address)
   try {
     const response = await attomApi.get('/transportationnoise', { params: { address: address } })
     return response.data
@@ -53,7 +51,6 @@ export const fetchTrasportationForProperty = async (
 export const fetchCommunityDetailsForProperty = async (
   geoIdV4: string
 ): Promise<AttomPropertyCommunityResponse> => {
-  console.log('fetching property community detail for ', geoIdV4)
   try {
     const response = await attomApi.get('/v4/neighborhood/community', {
       params: { geoIdv4: geoIdV4 },
@@ -73,7 +70,7 @@ export const fetchAdvancedPropertyDetails = async (address: string) => {
       method: 'GET',
       headers: {
         'x-rapidapi-host': 'zillow56.p.rapidapi.com',
-        'x-rapidapi-key': ZILLOW_API_KEY,
+        'x-rapidapi-key': RAPID_API_KEY,
       },
     })
 
@@ -90,6 +87,43 @@ export const fetchAdvancedPropertyDetails = async (address: string) => {
 }
 
 export const fetchPropOwnerDetails = async (name: string, address: string) => {
-  console.log('fetching details for owner: ', name, address)
-  return mockOwnerDetails
+  const searchDetailsUrl = `https://skip-tracing-working-api.p.rapidapi.com/search/bynameaddress?name=${name}&citystatezip=${address}&page=1`
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'x-rapidapi-host': 'skip-tracing-working-api.p.rapidapi.com',
+      'x-rapidapi-key': RAPID_API_KEY,
+    },
+  }
+
+  try {
+    const response = await fetch(searchDetailsUrl, options)
+
+    if (!response.ok) {
+      throw new Error(`Error fetching search details: ${response.statusText}`)
+    }
+
+    const searchData = await response.json()
+    console.log('details from search: ', searchData)
+
+    const personId = searchData?.PeopleDetails?.[0]?.['Person ID']
+    if (!personId) {
+      console.warn('No person ID found in search data.')
+      return null
+    }
+
+    const detailsUrl = `https://skip-tracing-working-api.p.rapidapi.com/search/detailsbyID?peo_id=${personId}`
+    const detailsResponse = await fetch(detailsUrl, options)
+
+    if (!detailsResponse.ok) {
+      throw new Error(`Error fetching person details: ${detailsResponse.statusText}`)
+    }
+
+    const detailsData = await detailsResponse.json()
+    return detailsData
+  } catch (error) {
+    console.error('Failed to fetch owner details:', error)
+    return null
+  }
 }
