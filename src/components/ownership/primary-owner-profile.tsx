@@ -48,7 +48,7 @@ export function IndividualOwnerProfile({
       </CardHeader>
       <CardContent className="space-y-6">
         {isLoading ? (
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2">
             <h2>Fetching advanced data...it may time and might be unreliable</h2>
             <Skeleton className="h-40 w-full my-4" />
           </div>

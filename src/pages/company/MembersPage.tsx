@@ -55,7 +55,6 @@ const MembersPage = () => {
     },
   })
 
-  // Fetch members
   const {
     data: members,
     isLoading,
@@ -68,7 +67,6 @@ const MembersPage = () => {
     },
   })
 
-  // Invite member mutation
   const inviteMutation = useMutation({
     mutationFn: (data: FormData) => memberApi.inviteMember(data),
     onSuccess: () => {
@@ -86,7 +84,6 @@ const MembersPage = () => {
     },
   })
 
-  // Cancel invitation mutation
   const cancelInvitationMutation = useMutation({
     mutationFn: (memberId: string) => memberApi.cancelInvitation(memberId),
     onSuccess: () => {
@@ -251,16 +248,30 @@ const MembersPage = () => {
                           : 'Not joined yet'}
                       </TableCell>
                       <TableCell className="text-right">
-                        {member.invitationStatus.status === 'pending' && (
+                        {member.invitationStatus.status === 'pending' ? (
                           <Button
-                            variant="ghost"
-                            size="icon"
+                            variant="outline"
+                            size="sm"
                             onClick={() => cancelInvitationMutation.mutate(member._id)}
                             disabled={cancelInvitationMutation.isPending}
+                            className="text-destructive hover:text-destructive"
                           >
-                            <XCircle className="h-4 w-4 text-destructive" />
-                            <span className="sr-only">Cancel invitation</span>
+                            <XCircle className="mr-2 h-4 w-4" />
+                            Cancel Invite
                           </Button>
+                        ) : (
+                          member.invitationStatus.status === 'accepted' && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => cancelInvitationMutation.mutate(member._id)}
+                              disabled={cancelInvitationMutation.isPending}
+                              className="text-destructive hover:text-destructive"
+                            >
+                              <XCircle className="mr-2 h-4 w-4" />
+                              Revoke Access
+                            </Button>
+                          )
                         )}
                       </TableCell>
                     </TableRow>

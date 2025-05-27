@@ -58,7 +58,7 @@ export const memberApi = {
 
   getCompanyMembers: () => api.get('/members'),
 
-  cancelInvitation: (memberId: string) => api.delete(`/members/invitation/${memberId}`),
+  cancelInvitation: (memberId: string) => api.patch(`/members/revoke/${memberId}`),
 }
 
 export const propertyApi = {

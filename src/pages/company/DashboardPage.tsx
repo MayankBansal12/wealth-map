@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/contexts/AuthContext'
-import { UsersRound, BarChart3, TrendingUp, Building } from 'lucide-react'
+import { LayoutDashboard, Users, FileText, Activity } from 'lucide-react'
 
 const CompanyDashboardPage = () => {
   const { user } = useAuth()
@@ -8,87 +8,90 @@ const CompanyDashboardPage = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back, {user?.name || 'Admin'}</p>
+        <h1 className="text-3xl font-bold tracking-tight">Company Dashboard</h1>
+        <p className="text-muted-foreground">
+          Manage {user?.name || 'your'} team and company resources
+        </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="col-span-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Members</CardTitle>
-            <UsersRound className="h-4 w-4 text-muted-foreground" />
+            <div>
+              <CardTitle>Member Management</CardTitle>
+              <CardDescription>Key features for managing your team</CardDescription>
+            </div>
+            <LayoutDashboard className="h-5 w-5 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">+2 from last month</p>
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>This is the company dashboard to view and manage members</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Invite any member to team with their email</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Cancel invitation or revoke access afterwards easily with one click</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>More features for member activity analysis coming soon...</span>
+              </li>
+            </ul>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
-            <Building className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">+3 from last month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Performance</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24%</div>
-            <p className="text-xs text-muted-foreground">+5.2% from last month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Analytics</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">573</div>
-            <p className="text-xs text-muted-foreground">+201 from last month</p>
-          </CardContent>
-        </Card>
+
+        <div className="space-y-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Team Members</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold blur-sm">12</div>
+              <p className="text-xs text-muted-foreground">Active members</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending Invites</CardTitle>
+              <FileText className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold blur-sm">3</div>
+              <p className="text-xs text-muted-foreground">Awaiting response</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Member Activity</CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold blur-sm">24</div>
+              <p className="text-xs text-muted-foreground">Actions this week</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-1 md:col-span-2 lg:col-span-4">
-          <CardHeader>
-            <CardTitle>Performance Overview</CardTitle>
-            <CardDescription>View your company&apos;s performance metrics</CardDescription>
-          </CardHeader>
-          <CardContent className="h-80">
-            <div className="h-full w-full flex items-center justify-center border-2 border-dashed rounded-lg">
-              <p className="text-muted-foreground">Performance chart will be displayed here</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="col-span-1 lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Latest actions from your team</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex items-center">
-                  <div className="mr-4 rounded-full bg-primary/10 p-2">
-                    <UsersRound className="h-4 w-4 text-primary" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">New member joined</p>
-                    <p className="text-xs text-muted-foreground">2 hours ago</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+          <CardDescription>Team member actions and notifications</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-muted-foreground">
+            Recent activity tracking coming soon...
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
