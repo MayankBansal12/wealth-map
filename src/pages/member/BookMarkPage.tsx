@@ -13,6 +13,17 @@ const BookMarkPage = () => {
   const bookmarks = useBookmarkStore((s) => s.bookmarks)
   const removeBookmark = useRemoveBookmark()
 
+  const handleViewDetails = (property: any) => {
+    const params = new URLSearchParams({
+      zip: property?.address?.postal1,
+      oneLine: property?.address?.oneLine,
+      line1: property?.address?.line1 ?? '',
+      line2: property?.address?.line2 ?? '',
+    })
+
+    navigate(`/member/property/${property.attomId}?${params.toString()}`)
+  }
+
   return (
     <div className="container mx-auto space-y-6 my-4">
       <div>
@@ -37,9 +48,9 @@ const BookMarkPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {bookmarks.map((bookmark) => (
+        {bookmarks?.map((bookmark) => (
           <Card
-            key={bookmark._id}
+            key={bookmark?._id}
             className="group hover:shadow-lg transition-all duration-200 border-0 shadow-md"
           >
             <CardHeader className="pb-3">
@@ -48,19 +59,19 @@ const BookMarkPage = () => {
                   <div className="flex items-center gap-2 mb-2">
                     <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
                     <Badge variant="secondary" className="text-xs">
-                      ID: {bookmark.property.attomId}
+                      ID: {bookmark?.property.attomId}
                     </Badge>
                   </div>
                   <h3 className="font-semibold text-lg leading-tight">
-                    {bookmark.property.address.line1}
+                    {bookmark?.property.address.line1}
                   </h3>
-                  <p className="text-sm mt-1">{bookmark.property.address.line2}</p>
+                  <p className="text-sm mt-1">{bookmark?.property.address.line2}</p>
                 </div>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={async () => {
-                    await removeBookmark.mutateAsync(bookmark._id)
+                    await removeBookmark.mutateAsync(bookmark?._id)
                     toast.success('Bookmark removed!')
                   }}
                   aria-label="Remove bookmark"
@@ -73,17 +84,17 @@ const BookMarkPage = () => {
             <CardContent className="pt-0">
               <div className="space-y-4">
                 <div className="p-3 rounded-lg bg-secondary">
-                  <p className="text-sm font-medium">{bookmark.property.address.oneLine}</p>
+                  <p className="text-sm font-medium">{bookmark?.property.address.oneLine}</p>
                 </div>
 
                 <div className="flex items-center gap-4 text-xs text-gray-500">
                   <div className="flex items-center gap-1">
-                    <span>Property Last Modified: {bookmark.property.vintage?.lastModified}</span>
+                    <span>Property Last Modified: {bookmark?.property.vintage?.lastModified}</span>
                   </div>
                 </div>
 
                 <Button
-                  onClick={() => navigate(`/member/property/${bookmark.property.attomId}`)}
+                  onClick={() => handleViewDetails(bookmark?.property)}
                   className="w-full group-hover:bg-blue-700 transition-colors"
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
