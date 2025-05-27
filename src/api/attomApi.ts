@@ -7,6 +7,8 @@ import {
   AttomPropertyTransporationResponse,
 } from '@/type/types'
 import { attomApi } from './axiosInstance'
+import { formatZillowResponse } from '@/lib/formatZillowResponse'
+const ZILLOW_API_KEY = import.meta.env.VITE_ZILLOW_API_KEY
 
 export const fetchPropertyForTypeAndPostCode = async (
   filters: AttomPropertyFilters
@@ -63,6 +65,25 @@ export const fetchCommunityDetailsForProperty = async (
 }
 
 export const fetchAdvancedPropertyDetails = async (address: string) => {
-  console.log('mock API call returns mock Data for address', address)
-  return null
+  const url = `https://zillow56.p.rapidapi.com/search_address?address=${address}`
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-host': 'zillow56.p.rapidapi.com',
+        'x-rapidapi-key': ZILLOW_API_KEY,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Error fetching property details: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return formatZillowResponse(data)
+  } catch (error) {
+    console.error('Failed to fetch property details:', error)
+    return null
+  }
 }

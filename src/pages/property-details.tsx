@@ -83,7 +83,11 @@ const PropertyDetails = () => {
         </TabsContent>
 
         <TabsContent value="advanced-info">
-          <AdvancedInfoTab propertyId={id} propertyData={property?.advancedInfo ?? null} />
+          <AdvancedInfoTab
+            propertyId={id}
+            propertyAddress={property?.propertyProfile?.address?.oneLine}
+            propertyData={property?.advancedInfo ?? null}
+          />
         </TabsContent>
 
         <TabsContent value="ownership-details">

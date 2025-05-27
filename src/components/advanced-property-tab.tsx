@@ -12,23 +12,28 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 interface AdvancedInfoTabProps {
   propertyId?: string
+  propertyAddress: string
   propertyData: any
 }
 
-export default function AdvancedInfoTab({ propertyId, propertyData }: AdvancedInfoTabProps) {
-  const shouldFetch = !propertyData && !!propertyId
+export default function AdvancedInfoTab({
+  propertyId,
+  propertyAddress,
+  propertyData,
+}: AdvancedInfoTabProps) {
+  const shouldFetch = !propertyData && !!propertyAddress
   const {
     data: fetchedAdvanced,
     isLoading,
     error,
-  } = useFetchAdvancedPropertyInfo(propertyId ?? '', shouldFetch)
+  } = useFetchAdvancedPropertyInfo(propertyAddress ?? '', shouldFetch)
   const updateProperty = useUpdatePropertyInfo()
 
   useEffect(() => {
     if (fetchedAdvanced && shouldFetch && propertyId) {
       updateProperty.mutate({ id: propertyId, update: { advancedInfo: fetchedAdvanced } })
     }
-  }, [fetchedAdvanced, shouldFetch, propertyId])
+  }, [fetchedAdvanced, shouldFetch, propertyId, propertyAddress])
 
   const finalAdvanced = propertyData || fetchedAdvanced
 
