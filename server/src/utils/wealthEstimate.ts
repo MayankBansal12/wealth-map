@@ -2,9 +2,6 @@ interface WealthEstimationInput {
   salePrice?: number
   estimatedMarketValue?: number
   neighborhoodMedianIncome?: number
-  zipCode?: string
-  city?: string
-  state?: string
   costOfLivingIndex?: number
   localMedianHomePrice?: number
   propertyTaxAssessment?: number
