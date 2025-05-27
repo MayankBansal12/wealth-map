@@ -12,23 +12,28 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 interface AdvancedInfoTabProps {
   propertyId?: string
+  propertyAddress: string
   propertyData: any
 }
 
-export default function AdvancedInfoTab({ propertyId, propertyData }: AdvancedInfoTabProps) {
-  const shouldFetch = !propertyData && !!propertyId
+export default function AdvancedInfoTab({
+  propertyId,
+  propertyAddress,
+  propertyData,
+}: AdvancedInfoTabProps) {
+  const shouldFetch = !propertyData && !!propertyAddress
   const {
     data: fetchedAdvanced,
     isLoading,
     error,
-  } = useFetchAdvancedPropertyInfo(propertyId ?? '', shouldFetch)
+  } = useFetchAdvancedPropertyInfo(propertyAddress ?? '', shouldFetch)
   const updateProperty = useUpdatePropertyInfo()
 
   useEffect(() => {
     if (fetchedAdvanced && shouldFetch && propertyId) {
       updateProperty.mutate({ id: propertyId, update: { advancedInfo: fetchedAdvanced } })
     }
-  }, [fetchedAdvanced, shouldFetch, propertyId])
+  }, [fetchedAdvanced, shouldFetch, propertyId, propertyAddress])
 
   const finalAdvanced = propertyData || fetchedAdvanced
 
@@ -45,8 +50,8 @@ export default function AdvancedInfoTab({ propertyId, propertyData }: AdvancedIn
       </Alert>
 
       {isLoading ? (
-        <div className="flex gap-2">
-          <h2>Fetching advanced data...it may time and might be unreliable</h2>
+        <div className="flex flex-col gap-4">
+          <h2>Fetching advanced data...it may take time and might be unreliable</h2>
           <Skeleton className="h-40 w-full my-4" />
         </div>
       ) : error || (!isLoading && !finalAdvanced) ? (

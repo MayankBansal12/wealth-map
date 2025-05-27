@@ -17,7 +17,7 @@ function App() {
   })
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="theme">
+    <ThemeProvider defaultTheme="light" storageKey="theme">
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <RouterProvider router={appRouter} />

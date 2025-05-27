@@ -1,11 +1,14 @@
+import { useEffect, useRef } from 'react'
+import { BookmarkIcon, SquareArrowUpRight } from 'lucide-react'
+import { toast } from 'sonner'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { AttomPropertyResponse } from '@/type/types'
 import { popularSearches } from '@/lib/mock-data'
 import { useInView } from 'react-intersection-observer'
-import { useEffect, useRef } from 'react'
-import { BookmarkIcon, SquareArrowUpRight } from 'lucide-react'
+import { useBookmarkStore } from '@/store/useBookmarkStore'
+import { useAddBookmark, useRemoveBookmark } from '@/hooks/use-bookmarks'
 
 interface PropertySearchResultsProps {
   data: AttomPropertyResponse | undefined
@@ -39,6 +42,10 @@ export function PropertySearchResults({
     rootMargin: '100px',
   })
   const fetchingRef = useRef(false)
+  const isBookmarked = useBookmarkStore((s) => s.isBookmarked)
+  const bookmarks = useBookmarkStore((s) => s.bookmarks)
+  const addBookmark = useAddBookmark()
+  const removeBookmark = useRemoveBookmark()
 
   useEffect(() => {
     if (inView && hasMore && !isLoading && !isFetchingNextPage && !fetchingRef.current) {
@@ -142,12 +149,28 @@ export function PropertySearchResults({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.stopPropagation()
-                    console.log('Bookmark property!')
+                    const attomId = property.identifier.attomId
+                    const alreadyBookmarked = isBookmarked(attomId)
+                    if (alreadyBookmarked) {
+                      const bookmark = bookmarks.find((b) => b.property.attomId === attomId)
+                      if (bookmark) {
+                        await removeBookmark.mutateAsync(bookmark._id)
+                        toast.success('Bookmark removed!')
+                      }
+                    } else {
+                      await addBookmark.mutateAsync(property)
+                      toast.success('Property bookmarked!')
+                    }
                   }}
+                  aria-label={
+                    isBookmarked(property.identifier.attomId) ? 'Remove bookmark' : 'Add bookmark'
+                  }
                 >
-                  <BookmarkIcon className="h-4 w-4" />
+                  <BookmarkIcon
+                    className={`h-4 w-4 ${isBookmarked(property.identifier.attomId) && 'fill-blue-600 text-blue-600'}`}
+                  />
                 </Button>
               </div>
             </div>
