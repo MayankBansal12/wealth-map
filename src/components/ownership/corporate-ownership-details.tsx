@@ -33,7 +33,7 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
                 <img
                   src={companyDetailsData?.logo || '/placeholder.svg'}
                   alt={companyDetailsData?.company_name}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain blur-md"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'
                   }}
@@ -46,12 +46,16 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
               <h3 className="text-xl font-bold">
                 {owner?.owner1?.fullName || companyDetailsData?.company_name}
               </h3>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-sm text-muted-foreground mt-1 blur-sm">
                 {companyDetailsData?.description?.substring(0, 150)}...
               </p>
               <div className="flex gap-2 mt-2">
-                <Badge variant="outline">{companyDetailsData?.industry}</Badge>
-                <Badge variant="outline">{companyDetailsData?.type}</Badge>
+                <Badge variant="outline" className="blur-sm">
+                  {companyDetailsData?.industry}
+                </Badge>
+                <Badge variant="outline" className="blur-sm">
+                  {companyDetailsData?.type}
+                </Badge>
               </div>
             </div>
           </div>
@@ -66,22 +70,26 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Founded:</span>
-                    <span className="font-medium">{companyDetailsData?.year_founded || 'N/A'}</span>
+                    <span className="font-medium blur-sm">
+                      {companyDetailsData?.year_founded || 'N/A'}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Industry:</span>
-                    <span className="font-medium">{companyDetailsData?.industry || 'N/A'}</span>
+                    <span className="font-medium blur-sm">
+                      {companyDetailsData?.industry || 'N/A'}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Type:</span>
-                    <span className="font-medium capitalize">
+                    <span className="font-medium capitalize blur-sm">
                       {companyDetailsData?.type || 'N/A'}
                     </span>
                   </div>
                   {companyDetailsData?.ticker && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Ticker:</span>
-                      <span className="font-medium">
+                      <span className="font-medium blur-sm">
                         {companyDetailsData?.ticker} ({companyDetailsData?.exchange})
                       </span>
                     </div>
@@ -96,13 +104,13 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
                 </h4>
                 <div className="text-sm">
                   <div className="font-medium">Registered Address:</div>
-                  <div className="text-muted-foreground">
+                  <div className="text-muted-foreground blur-sm">
                     {owner.mailingAddressOneLine || 'Not available'}
                   </div>
                 </div>
                 <div className="text-sm">
                   <div className="font-medium">Corporate Headquarters:</div>
-                  <div className="text-muted-foreground">
+                  <div className="text-muted-foreground blur-sm">
                     {companyDetailsData?.street_address}
                     <br />
                     {companyDetailsData?.city}, {companyDetailsData?.state}{' '}
@@ -123,13 +131,13 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Employees:</span>
-                    <span className="font-medium">
+                    <span className="font-medium blur-sm">
                       {companyDetailsData?.employee_count?.toLocaleString() || 'N/A'}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Range:</span>
-                    <span className="font-medium">
+                    <span className="font-medium blur-sm">
                       {companyDetailsData?.employee_range || 'N/A'}
                     </span>
                   </div>
@@ -144,7 +152,7 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Annual Revenue:</span>
-                    <span className="font-medium">
+                    <span className="font-medium blur-sm">
                       $
                       {(Number.parseInt(companyDetailsData?.annual_revenue) / 1000000000).toFixed(
                         1
@@ -154,7 +162,7 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Revenue Range:</span>
-                    <span className="font-medium">
+                    <span className="font-medium blur-sm">
                       {companyDetailsData?.revenue_range || 'N/A'}
                     </span>
                   </div>
@@ -170,19 +178,23 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
                   {companyDetailsData?.phone_numbers?.[0] && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Phone:</span>
-                      <span className="font-medium">{companyDetailsData?.phone_numbers[0]}</span>
+                      <span className="font-medium blur-sm">
+                        {companyDetailsData?.phone_numbers[0]}
+                      </span>
                     </div>
                   )}
                   {companyDetailsData?.email_addresses?.[0] && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Email:</span>
-                      <span className="font-medium">{companyDetailsData?.email_addresses[0]}</span>
+                      <span className="font-medium blur-sm">
+                        {companyDetailsData?.email_addresses[0]}
+                      </span>
                     </div>
                   )}
                   {companyDetailsData?.domain && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Website:</span>
-                      <span className="font-medium">{companyDetailsData?.domain}</span>
+                      <span className="font-medium blur-sm">{companyDetailsData?.domain}</span>
                     </div>
                   )}
                 </div>
@@ -195,7 +207,7 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
               <h4 className="font-medium">Industry Tags</h4>
               <div className="flex flex-wrap gap-2">
                 {companyDetailsData?.tags.map((tag: string, index: number) => (
-                  <Badge key={index} variant="outline" className="text-xs">
+                  <Badge key={index} variant="outline" className="text-xs blur-sm">
                     {tag}
                   </Badge>
                 ))}
@@ -210,22 +222,22 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
             </h4>
             <div className="flex flex-wrap gap-2">
               {companyDetailsData?.linkedin_url && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-xs blur-sm">
                   LinkedIn
                 </Badge>
               )}
               {companyDetailsData?.facebook_url && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-xs blur-sm">
                   Facebook
                 </Badge>
               )}
               {companyDetailsData?.twitter_url && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-xs blur-sm">
                   Twitter
                 </Badge>
               )}
               {companyDetailsData?.instagram_url && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-xs blur-sm">
                   Instagram
                 </Badge>
               )}
