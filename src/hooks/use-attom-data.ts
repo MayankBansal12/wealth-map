@@ -3,6 +3,7 @@ import {
   fetchCommunityDetailsForProperty,
   fetchPropertyDetail,
   fetchPropertyForTypeAndPostCode,
+  fetchPropOwnerDetails,
   fetchTrasportationForProperty,
 } from '@/api/attomApi'
 import { AttomPropertyDetailReqParam, AttomPropertyFilters } from '@/type/types'
@@ -59,5 +60,13 @@ export const useFetchAdvancedPropertyInfo = (address: string, shouldFetch: boole
     queryKey: ['property-advanced-detail', address],
     queryFn: () => fetchAdvancedPropertyDetails(address),
     enabled: Boolean(address) && shouldFetch,
+  })
+}
+
+export const useFetchOwnerDetails = (name: string, address: string, shouldFetch: boolean) => {
+  return useQuery({
+    queryKey: ['property-owner-detail', name, address],
+    queryFn: () => fetchPropOwnerDetails(name, address),
+    enabled: Boolean(name) && Boolean(address) && shouldFetch,
   })
 }

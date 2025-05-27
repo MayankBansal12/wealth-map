@@ -8,6 +8,7 @@ import {
 } from '@/type/types'
 import { attomApi } from './axiosInstance'
 import { formatZillowResponse } from '@/lib/formatZillowResponse'
+import { mockOwnerDetails } from '@/mockOwnerDetails'
 const ZILLOW_API_KEY = import.meta.env.VITE_ZILLOW_API_KEY
 
 export const fetchPropertyForTypeAndPostCode = async (
@@ -86,4 +87,9 @@ export const fetchAdvancedPropertyDetails = async (address: string) => {
     console.error('Failed to fetch property details:', error)
     return null
   }
+}
+
+export const fetchPropOwnerDetails = async (name: string, address: string) => {
+  console.log('fetching details for owner: ', name, address)
+  return mockOwnerDetails
 }

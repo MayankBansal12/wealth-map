@@ -91,7 +91,11 @@ const PropertyDetails = () => {
         </TabsContent>
 
         <TabsContent value="ownership-details">
-          <OwnershipDetailsTab property={property ?? null} />
+          <OwnershipDetailsTab
+            propertyId={id}
+            property={property ?? null}
+            zestimate={property?.advancedInfo?.zestimate}
+          />
         </TabsContent>
       </Tabs>
     </div>

@@ -50,8 +50,8 @@ export default function AdvancedInfoTab({
       </Alert>
 
       {isLoading ? (
-        <div className="flex gap-2">
-          <h2>Fetching advanced data...it may time and might be unreliable</h2>
+        <div className="flex flex-col gap-4">
+          <h2>Fetching advanced data...it may take time and might be unreliable</h2>
           <Skeleton className="h-40 w-full my-4" />
         </div>
       ) : error || (!isLoading && !finalAdvanced) ? (
