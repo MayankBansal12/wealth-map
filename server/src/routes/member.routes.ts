@@ -6,6 +6,7 @@ import {
   getBookmarks,
   addBookmark,
   removeBookmark,
+  getWealthEstimate,
 } from '../controllers/member.controller.js'
 import { auth, AuthRequest } from '../middleware/auth.middleware.js'
 
@@ -30,5 +31,7 @@ router.post('/bookmark', (req: Request, res: Response, next: NextFunction) => {
 router.delete('/bookmark/:bookmarkId', (req: Request, res: Response, next: NextFunction) => {
   removeBookmark(req as AuthRequest, res).catch(next)
 })
-
+router.get('/wealth-estimate', (req: Request, res: Response, next: NextFunction) => {
+  getWealthEstimate(req as AuthRequest, res).catch(next)
+})
 export default router

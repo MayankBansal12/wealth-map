@@ -7,6 +7,7 @@ import { sendInvitationEmail } from '../utils/email.js'
 import { AuthRequest } from '../middleware/auth.middleware.js'
 import { z } from 'zod'
 import mongoose from 'mongoose'
+import { calculateWealthEstimate } from '../utils/wealthEstimate.js'
 
 const inviteMemberSchema = z.object({
   email: z.string().email(),
@@ -248,5 +249,15 @@ export const removeBookmark = async (req: AuthRequest, res: Response) => {
   } catch (err) {
     console.error('Failed to remove bookmarks', err)
     res.status(500).json({ error: 'Failed to remove bookmark' })
+  }
+}
+
+export const getWealthEstimate = async (req: AuthRequest, res: Response) => {
+  try {
+    const estimateResults = calculateWealthEstimate(req.query)
+    res.json(estimateResults)
+  } catch (err) {
+    console.error('Error calculating wealth estimate', err)
+    res.status(500).json({ error: 'Failed to get wealth estimate' })
   }
 }
