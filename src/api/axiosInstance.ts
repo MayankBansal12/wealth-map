@@ -1,8 +1,9 @@
 import axios, { AxiosInstance } from 'axios'
 import Cookies from 'js-cookie'
+import apiKeyManager from '@/utils/apiKeyManager'
+
 const baseUrl = import.meta.env.VITE_BASE_URL
 const attomUrl = import.meta.env.VITE_ATTOM_API_URL
-const attomApiKey = import.meta.env.VITE_ATTOM_API_KEY
 
 const createInstance = (apiURL: string) => {
   const apiInstance = axios.create({
@@ -36,7 +37,7 @@ const createAttomInstance = (apiURL: string) => {
 
   apiInstance.interceptors.request.use(
     (config) => {
-      config.headers.apikey = attomApiKey
+      config.headers.apikey = apiKeyManager.getNextAttomApiKey()
       return config
     },
     (error) => Promise.reject(error)

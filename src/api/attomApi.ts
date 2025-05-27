@@ -8,7 +8,7 @@ import {
 } from '@/type/types'
 import { attomApi } from './axiosInstance'
 import { formatZillowResponse } from '@/lib/formatZillowResponse'
-const RAPID_API_KEY = import.meta.env.VITE_RAPID_API_KEY
+import apiKeyManager from '@/utils/apiKeyManager'
 
 export const fetchPropertyForTypeAndPostCode = async (
   filters: AttomPropertyFilters
@@ -70,7 +70,7 @@ export const fetchAdvancedPropertyDetails = async (address: string) => {
       method: 'GET',
       headers: {
         'x-rapidapi-host': 'zillow56.p.rapidapi.com',
-        'x-rapidapi-key': RAPID_API_KEY,
+        'x-rapidapi-key': apiKeyManager.getNextRapidApiKey(),
       },
     })
 
@@ -93,7 +93,7 @@ export const fetchPropOwnerDetails = async (name: string, address: string) => {
     method: 'GET',
     headers: {
       'x-rapidapi-host': 'skip-tracing-working-api.p.rapidapi.com',
-      'x-rapidapi-key': RAPID_API_KEY,
+      'x-rapidapi-key': apiKeyManager.getNextRapidApiKey(),
     },
   }
 
