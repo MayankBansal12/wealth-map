@@ -62,9 +62,21 @@ export const memberApi = {
 }
 
 export const propertyApi = {
-  getPropertyDetails: (id: string) => api.get(`/property/${id}`),
+  getProperties: async (params?: { next?: string; pageSize?: number }) => {
+    const queryParams = new URLSearchParams()
+    if (params?.next) queryParams.append('next', params.next)
+    if (params?.pageSize) queryParams.append('pageSize', params.pageSize.toString())
 
-  updateProperty: (id: string, data: any) => api.put(`/property/${id}`, data),
+    return api.get(`/property?${queryParams.toString()}`)
+  },
+
+  getPropertyDetails: async (id: string) => {
+    return api.get(`/property/${id}`)
+  },
+
+  updateProperty: async (id: string, data: any) => {
+    return api.put(`/property/${id}`, data)
+  },
 }
 
 export const profileApi = {

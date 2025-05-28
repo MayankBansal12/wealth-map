@@ -226,7 +226,8 @@ export const getBookmarks = async (req: AuthRequest, res: Response) => {
 export const addBookmark = async (req: AuthRequest, res: Response) => {
   try {
     const { property } = req.body
-    if (!property) return res.status(400).json({ error: 'Property is required' })
+    if (!property || !property.attomId)
+      return res.status(400).json({ error: 'Property is required' })
     const exists = await Bookmark.findOne({
       userId: req.userId,
       'property.attomId': property.attomId,

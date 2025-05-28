@@ -151,12 +151,12 @@ export function PropertySearchResults({
                   size="icon"
                   onClick={async (e) => {
                     e.stopPropagation()
-                    const attomId = property.identifier.attomId
+                    const attomId = property?.identifier?.attomId
                     const alreadyBookmarked = isBookmarked(attomId)
                     if (alreadyBookmarked) {
-                      const bookmark = bookmarks.find((b) => b.property.attomId === attomId)
+                      const bookmark = bookmarks.find((b) => b?.property?.attomId === attomId)
                       if (bookmark) {
-                        await removeBookmark.mutateAsync(bookmark._id)
+                        await removeBookmark.mutateAsync(bookmark?._id)
                         toast.success('Bookmark removed!')
                       }
                     } else {
@@ -165,11 +165,11 @@ export function PropertySearchResults({
                     }
                   }}
                   aria-label={
-                    isBookmarked(property.identifier.attomId) ? 'Remove bookmark' : 'Add bookmark'
+                    isBookmarked(property?.identifier?.attomId) ? 'Remove bookmark' : 'Add bookmark'
                   }
                 >
                   <BookmarkIcon
-                    className={`h-4 w-4 ${isBookmarked(property.identifier.attomId) && 'fill-blue-600 text-blue-600'}`}
+                    className={`h-4 w-4 ${isBookmarked(property?.identifier?.attomId) && 'fill-blue-600 text-blue-600'}`}
                   />
                 </Button>
               </div>

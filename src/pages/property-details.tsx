@@ -42,7 +42,7 @@ const PropertyDetails = () => {
             const attomId = property.propertyProfile.identifier?.attomId
             const alreadyBookmarked = isBookmarked(attomId)
             if (alreadyBookmarked) {
-              const bookmark = bookmarks.find((b) => b.property.attomId === attomId)
+              const bookmark = bookmarks.find((b) => b?.property?.attomId === attomId)
               if (bookmark) {
                 await removeBookmark.mutateAsync(bookmark._id)
                 toast.success('Bookmark removed!')
