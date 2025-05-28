@@ -153,10 +153,10 @@ export const calculateWealthEstimate = (input: WealthEstimationInput): WealthEst
 
   const baseEstimate = getNetWorthFromPropertyValue(adjustedPropertyValue, equityEstimate)
 
-  const netWorthMin = Math.round(baseEstimate.min * incomeMultiplier)
-  const netWorthMax = Math.round(baseEstimate.max * incomeMultiplier)
-  const incomeMin = Math.round(baseEstimate.incomeMin * incomeMultiplier)
-  const incomeMax = Math.round(baseEstimate.incomeMax * incomeMultiplier)
+  const netWorthMin = Math.abs(Math.round(baseEstimate.min * incomeMultiplier))
+  const netWorthMax = Math.abs(Math.round(baseEstimate.max * incomeMultiplier))
+  const incomeMin = Math.abs(Math.round(baseEstimate.incomeMin * incomeMultiplier))
+  const incomeMax = Math.abs(Math.round(baseEstimate.incomeMax * incomeMultiplier))
 
   let category: string
   let percentileRange: string

@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { propertyApi } from '@/services/api'
 
 export const useProperties = () => {
@@ -13,5 +13,13 @@ export const useProperties = () => {
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     initialPageParam: null,
+  })
+}
+
+export const usePropertyWealthEstimate = (params: any, shouldFetch?: boolean) => {
+  return useQuery({
+    queryKey: ['wealth-estimate', params],
+    queryFn: async () => await propertyApi.getWealthEstimateForOwner(params),
+    enabled: shouldFetch,
   })
 }
