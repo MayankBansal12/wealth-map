@@ -4,6 +4,7 @@ import { PropertyDetails } from '@/components/property-tab/basic-details'
 import { OwnerDetails } from '@/components/property-tab/owner-details'
 import { PropertySummary } from '@/components/property-tab/property-summary'
 import { SalesDetails } from '@/components/property-tab/sales-details'
+import { MortgageDetails } from '@/components/property-tab/mortgage-details'
 import { TransportationAccordion } from '@/components/transport-accordian'
 import { NeighborhoodAccordion } from '@/components/neighborhood-accordion'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -126,7 +127,10 @@ export default function PropertyInfoTab({
         <SalesDetails sale={finalProfile?.sale} assessment={finalProfile?.assessment} />
       </div>
 
-      <OwnerDetails owner={finalProfile?.assessment?.owner} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <OwnerDetails owner={finalProfile?.assessment?.owner} />
+        <MortgageDetails mortgage={propertyData.assessment.mortgage} />
+      </div>
 
       <div className="text-muted-foreground">
         View more financial and owner related details on &quot;Finance & Ownership Details&quot;

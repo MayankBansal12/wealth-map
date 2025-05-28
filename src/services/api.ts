@@ -77,6 +77,15 @@ export const propertyApi = {
   updateProperty: async (id: string, data: any) => {
     return api.put(`/property/${id}`, data)
   },
+
+  getWealthEstimateForOwner: async (params: any) => {
+    const filteredParams = Object.fromEntries(
+      Object.entries(params).filter(([_, value]) => value !== null && value !== undefined)
+    )
+
+    const queryString = new URLSearchParams(filteredParams as Record<string, string>).toString()
+    return api.get(`/members/wealth-estimate?${queryString}`)
+  },
 }
 
 export const profileApi = {
