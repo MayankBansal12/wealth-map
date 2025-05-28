@@ -19,6 +19,7 @@ import MemberProfilePage from '@/pages/member/ProfilePage'
 import BookMarkPage from '@/pages/member/BookMarkPage'
 import ReportsPage from '@/pages/member/ReportsPage'
 
+import RecentProperty from '@/pages/recent-property'
 import PropertyDetails from '@/pages/property-details'
 import SearchPlace from '@/pages/searchplace'
 
@@ -62,6 +63,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/member', element: <Navigate to="/member/dashboard" replace /> },
       { path: '/member/dashboard', element: <MemberDashboardPage /> },
+      { path: '/member/recent-properties', element: <RecentProperty /> },
       { path: '/member/bookmarks', element: <BookMarkPage /> },
       { path: '/member/reports', element: <ReportsPage /> },
       { path: '/member/profile', element: <MemberProfilePage /> },
