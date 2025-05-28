@@ -42,7 +42,7 @@ const BookMarkPage = () => {
       </div>
 
       <div>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           {bookmarks.length} bookmarked {bookmarks.length === 1 ? 'property' : 'properties'}
         </p>
       </div>
@@ -87,7 +87,7 @@ const BookMarkPage = () => {
                   <p className="text-sm font-medium">{bookmark?.property.address.oneLine}</p>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs text-gray-500">
+                <div className="flex items-center gap-4 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <span>Property Last Modified: {bookmark?.property.vintage?.lastModified}</span>
                   </div>
@@ -107,10 +107,10 @@ const BookMarkPage = () => {
       </div>
 
       {bookmarks.length === 0 && !isLoading && (
-        <div className="text-center py-12">
-          <Bookmark className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No bookmarks found</h3>
-          <p className="text-gray-500">Start bookmarking properties to see them here.</p>
+        <div className="text-center py-12 text-muted-foreground">
+          <Bookmark className="h-12 w-12 mx-auto mb-4" />
+          <h3 className="text-lg font-medium mb-2">No bookmarks found</h3>
+          <p>Start bookmarking properties to see them here.</p>
         </div>
       )}
     </div>

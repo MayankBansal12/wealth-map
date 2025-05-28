@@ -119,7 +119,7 @@ const MembersPage = () => {
         )
       case 'expired':
         return (
-          <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
+          <Badge variant="outline" className="bg-gray-50 text-muted-foreground border-gray-200">
             Expired
           </Badge>
         )

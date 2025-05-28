@@ -99,11 +99,11 @@ export function WealthEstimateCard({ property, zestimate }: WealthEstimateCardPr
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
-                  <div className="flex items-center gap-2">
-                    <Home className="h-4 w-4 text-green-600" />
+                  <div className="flex items-center gap-2 text-green-600">
+                    <Home className="h-4 w-4" />
                     <div>
                       <div className="text-sm font-medium">Property Equity</div>
-                      <div className="text-xs text-green-600">Primary Asset</div>
+                      <div className="text-xs">Primary Asset</div>
                     </div>
                   </div>
                   <span className="font-bold text-green-700">
@@ -112,11 +112,11 @@ export function WealthEstimateCard({ property, zestimate }: WealthEstimateCardPr
                 </div>
 
                 <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <div className="flex items-center gap-2">
-                    <Banknote className="h-4 w-4 text-blue-600" />
+                  <div className="flex items-center gap-2 text-blue-600">
+                    <Banknote className="h-4 w-4" />
                     <div>
                       <div className="text-sm font-medium">Liquid Assets</div>
-                      <div className="text-xs text-blue-600">Cash & Savings</div>
+                      <div className="text-xs">Cash & Savings</div>
                     </div>
                   </div>
                   <span className="font-bold text-blue-700">
@@ -125,11 +125,11 @@ export function WealthEstimateCard({ property, zestimate }: WealthEstimateCardPr
                 </div>
 
                 <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg border border-purple-200">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-purple-600" />
+                  <div className="flex items-center gap-2 text-purple-600">
+                    <TrendingUp className="h-4 w-4" />
                     <div>
                       <div className="text-sm font-medium">Investments</div>
-                      <div className="text-xs text-purple-600">Stocks, Bonds, 401k</div>
+                      <div className="text-xs">Stocks, Bonds, 401k</div>
                     </div>
                   </div>
                   <span className="font-bold text-purple-700">

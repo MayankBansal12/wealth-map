@@ -33,9 +33,9 @@ export function SelectedLocationCard({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading && <p className="text-sm text-gray-600">Loading location details...</p>}
+        {isLoading && <p className="text-sm text-muted-foreground">Loading location details...</p>}
         {error && (
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             {error?.message ?? 'Unable to get results for the location!'}
           </p>
         )}
@@ -51,9 +51,9 @@ export function SelectedLocationCard({
                 reverseGeocodeData?.components?._type && (
                 <Badge>{formatAliasToNormal(reverseGeocodeData.components._type)}</Badge>
               )}
-            <p className="text-sm text-gray-600">{reverseGeocodeData.formatted}</p>
+            <p className="text-sm text-muted-foreground">{reverseGeocodeData.formatted}</p>
             {reverseGeocodeData.components && (
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-muted-foreground">
                 <p>
                   {[
                     reverseGeocodeData.components.city,

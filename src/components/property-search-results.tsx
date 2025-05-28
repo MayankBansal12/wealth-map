@@ -103,7 +103,7 @@ export function PropertySearchResults({
 
   if (data?.status?.msg === 'SuccessWithoutResult' || !data?.property?.length) {
     return (
-      <div className="text-gray-500 h-1/4 flex items-center justify-center">
+      <div className="text-muted-foreground h-1/4 flex items-center justify-center">
         No properties found for that postal area/code
       </div>
     )
@@ -127,7 +127,7 @@ export function PropertySearchResults({
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Published: {new Date(property.vintage.pubDate).toLocaleDateString()} | Last
                 Modified: {new Date(property.vintage.lastModified).toLocaleDateString()}
               </p>
