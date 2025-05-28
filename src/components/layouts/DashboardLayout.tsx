@@ -247,6 +247,15 @@ const DashboardLayout = () => {
       </AlertDialog>
 
       <main className="flex-1 ml-0 md:ml-16 transition-all duration-300 ease-in-out">
+        {/* <div className="flex items-center justify-between p-6 pb-0">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-2xl">WealthMap</span>
+          </div>
+          <Button onClick={() => navigate('/member/searchplace')} variant="outline" className="gap-2">
+            <Search className="h-4 w-4" />
+            Explore Properties
+          </Button>
+        </div> */}
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
