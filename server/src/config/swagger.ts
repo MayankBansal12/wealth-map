@@ -1,4 +1,5 @@
 import swaggerJsdoc from 'swagger-jsdoc'
+const serverUrl = process.env.SWAGGER_SERVER_URL
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -10,8 +11,8 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: 'http://localhost:5000',
-        description: 'Development server',
+        url: serverUrl,
+        description: 'API server',
       },
     ],
     components: {
