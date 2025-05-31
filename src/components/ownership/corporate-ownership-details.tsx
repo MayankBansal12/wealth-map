@@ -105,7 +105,7 @@ export function CorporateOwnerDetails({ owner, companyDetailsData }: CorporateOw
                 <div className="text-sm">
                   <div className="font-medium">Registered Address:</div>
                   <div className="text-muted-foreground blur-sm">
-                    {owner.mailingAddressOneLine || 'Not available'}
+                    {owner?.mailingAddressOneLine || 'Not available'}
                   </div>
                 </div>
                 <div className="text-sm">

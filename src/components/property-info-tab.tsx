@@ -129,7 +129,7 @@ export default function PropertyInfoTab({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <OwnerDetails owner={finalProfile?.assessment?.owner} />
-        <MortgageDetails mortgage={propertyData.assessment.mortgage} />
+        <MortgageDetails mortgage={propertyData?.assessment?.mortgage} />
       </div>
 
       <div className="text-muted-foreground">

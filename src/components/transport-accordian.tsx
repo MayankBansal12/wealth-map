@@ -100,8 +100,8 @@ export function TransportationAccordion({
                       {transportationData?.road_noise?.level_description}
                     </p>
 
-                    {transportationData.road_noise?.noise_sources &&
-                      transportationData.road_noise?.noise_sources?.length > 0 && (
+                    {transportationData?.road_noise?.noise_sources &&
+                      transportationData?.road_noise?.noise_sources?.length > 0 && (
                         <div className="mt-2">
                           <h5 className="text-xs font-medium mb-1">Noise Sources:</h5>
                           <ul className="text-xs space-y-1">

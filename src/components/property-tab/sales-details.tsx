@@ -29,10 +29,10 @@ export function SalesDetails({ sale, assessment }: SalesDetailsProps) {
 
             <div className="bg-muted/50 p-4 rounded-lg">
               <div className="text-2xl font-bold mb-1">
-                ${sale.amount?.saleAmt?.toLocaleString() || 'N/A'}
+                ${sale?.amount?.saleAmt?.toLocaleString() || 'N/A'}
               </div>
               <div className="text-sm text-muted-foreground">
-                {sale.amount?.saleTransType || 'N/A'}
+                {sale?.amount?.saleTransType || 'N/A'}
               </div>
             </div>
 
@@ -40,13 +40,13 @@ export function SalesDetails({ sale, assessment }: SalesDetailsProps) {
               <div className="flex flex-col p-3 bg-muted/30 rounded-lg">
                 <span className="text-muted-foreground">Price per Sq Ft</span>
                 <span className="font-medium">
-                  ${sale.calculation?.pricePerSizeUnit?.toFixed(2) || 'N/A'}
+                  ${sale?.calculation?.pricePerSizeUnit?.toFixed(2) || 'N/A'}
                 </span>
               </div>
               <div className="flex flex-col p-3 bg-muted/30 rounded-lg">
                 <span className="text-muted-foreground">Price per Bedroom</span>
                 <span className="font-medium">
-                  ${sale.calculation?.pricePerBed?.toLocaleString() || 'N/A'}
+                  ${sale?.calculation?.pricePerBed?.toLocaleString() || 'N/A'}
                 </span>
               </div>
             </div>

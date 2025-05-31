@@ -53,7 +53,7 @@ export function MortgageDetails({ mortgage }: MortgageDetailsProps) {
   const totalMortgageValue = calculateTotalMortgageValue(mortgage)
   const titleCompany = mortgage?.title?.companyName
 
-  if (activeMortgages.length === 0) {
+  if (activeMortgages?.length === 0) {
     return (
       <Card className="h-fit">
         <CardHeader className="pb-4">
@@ -87,8 +87,8 @@ export function MortgageDetails({ mortgage }: MortgageDetailsProps) {
             <div>
               <h4 className="font-medium text-blue-900">Total Mortgage Amount</h4>
               <p className="text-sm text-blue-700">
-                {activeMortgages.length} active{' '}
-                {activeMortgages.length === 1 ? 'mortgage' : 'mortgages'}
+                {activeMortgages?.length} active{' '}
+                {activeMortgages?.length === 1 ? 'mortgage' : 'mortgages'}
               </p>
             </div>
             <div className="text-2xl font-bold text-right text-blue-900">
@@ -98,15 +98,15 @@ export function MortgageDetails({ mortgage }: MortgageDetailsProps) {
         </div>
 
         <div className="space-y-3">
-          {activeMortgages.map((mortgageItem, index) => (
+          {activeMortgages?.map((mortgageItem, index) => (
             <div key={index} className="border rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs">
-                    {mortgageItem?.type.replace('Concurrent', '')} Mortgage
+                    {mortgageItem?.type?.replace('Concurrent', '')} Mortgage
                   </Badge>
                   <span className="font-bold text-lg">
-                    ${mortgageItem?.amount.toLocaleString()}
+                    ${mortgageItem?.amount?.toLocaleString()}
                   </span>
                 </div>
                 <div className="text-right">
@@ -145,7 +145,7 @@ export function MortgageDetails({ mortgage }: MortgageDetailsProps) {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Loan Date:</span>
                     <span className="font-medium">
-                      {new Date(mortgageItem?.date).toLocaleDateString()}
+                      {new Date(mortgageItem?.date)?.toLocaleDateString()}
                     </span>
                   </div>
                 )}
@@ -154,7 +154,7 @@ export function MortgageDetails({ mortgage }: MortgageDetailsProps) {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Due Date:</span>
                     <span className="font-medium">
-                      {new Date(mortgageItem?.dueDate).toLocaleDateString()}
+                      {new Date(mortgageItem?.dueDate)?.toLocaleDateString()}
                     </span>
                   </div>
                 )}

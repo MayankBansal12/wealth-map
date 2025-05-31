@@ -31,16 +31,16 @@ export function OwnerDetails({ owner }: OwnerDetailsProps) {
           <div>
             <h4 className="font-medium text-sm text-muted-foreground mb-1">Owner Type</h4>
             <Badge variant="default" className="text-sm">
-              {owner.description || owner.type || 'Unknown'}
+              {owner?.description || owner?.type || 'Unknown'}
             </Badge>
           </div>
           <div className="text-right">
             <h4 className="font-medium text-sm text-muted-foreground mb-1">Occupancy</h4>
             <Badge
-              variant={owner.absenteeOwnerStatus === 'O' ? 'default' : 'secondary'}
+              variant={owner?.absenteeOwnerStatus === 'O' ? 'default' : 'secondary'}
               className="text-sm"
             >
-              {owner.absenteeOwnerStatus === 'O' ? 'Owner Occupied' : 'Non-Owner Occupied'}
+              {owner?.absenteeOwnerStatus === 'O' ? 'Owner Occupied' : 'Non-Owner Occupied'}
             </Badge>
           </div>
         </div>
@@ -69,7 +69,7 @@ export function OwnerDetails({ owner }: OwnerDetailsProps) {
             <div className="space-y-2">
               {allOwners.slice(1).map((ownerItem, index) => (
                 <div key={index} className="p-2 bg-muted/20 rounded-md">
-                  <div className="text-sm font-medium">{ownerItem.fullName}</div>
+                  <div className="text-sm font-medium">{ownerItem?.fullName}</div>
                 </div>
               ))}
             </div>
@@ -83,7 +83,7 @@ export function OwnerDetails({ owner }: OwnerDetailsProps) {
           </h4>
           <div className="p-3 bg-muted/30 rounded-lg">
             <div className="text-sm leading-relaxed">
-              {owner.mailingAddressOneLine || 'Not available'}
+              {owner?.mailingAddressOneLine || 'Not available'}
             </div>
           </div>
         </div>
@@ -92,7 +92,7 @@ export function OwnerDetails({ owner }: OwnerDetailsProps) {
           <div className="flex items-center gap-2 text-sm">
             <MapPin className="h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">
-              {owner.absenteeOwnerStatus === 'O'
+              {owner?.absenteeOwnerStatus === 'O'
                 ? 'Mailing address matches property address'
                 : 'Mailing address differs from property address'}
             </span>
